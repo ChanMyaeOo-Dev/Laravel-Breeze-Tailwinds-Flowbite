@@ -8,6 +8,7 @@
 @source '../../storage/framework/views/*.php';
 @source "../../node_modules/flowbite";
 
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans:

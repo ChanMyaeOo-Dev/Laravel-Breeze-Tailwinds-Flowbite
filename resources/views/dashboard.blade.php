@@ -1,171 +1,202 @@
 <x-app-layout>
-    <x-slot name="header">
+    {{-- <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Dashboard') }}
         </h2>
-    </x-slot>
+    </x-slot> --}}
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xs sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
+
+
+    <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+        <div class="p-4">
+            <label for="input-group-1" class="sr-only">Search</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                        height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
+                            d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                    </svg>
                 </div>
-
-                <div class="p-6 m-3">
-
-
-                    <!-- Modal toggle -->
-                    <button data-modal-target="default-modal" data-modal-toggle="default-modal"
-                        class="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none"
-                        type="button">
-                        Toggle modal
-                    </button>
-
-                    <!-- Main modal -->
-                    <div id="default-modal" tabindex="-1" aria-hidden="true"
-                        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                        <div class="relative p-4 w-full max-w-2xl max-h-full">
-                            <!-- Modal content -->
-                            <div
-                                class="relative bg-neutral-primary-soft border border-default rounded-base shadow-sm p-4 md:p-6">
-                                <!-- Modal header -->
-                                <div class="flex items-center justify-between border-b border-default pb-4 md:pb-5">
-                                    <h3 class="text-lg font-medium text-heading">
-                                        Terms of Service
-                                    </h3>
-                                    <button type="button"
-                                        class="text-body bg-transparent hover:bg-neutral-tertiary hover:text-heading rounded-base text-sm w-9 h-9 ms-auto inline-flex justify-center items-center"
-                                        data-modal-hide="default-modal">
-                                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6" />
-                                        </svg>
-                                        <span class="sr-only">Close modal</span>
-                                    </button>
-                                </div>
-                                <!-- Modal body -->
-                                <div class="space-y-4 md:space-y-6 py-4 md:py-6">
-                                    <p class="leading-relaxed text-body">
-                                        With less than a month to go before the European Union enacts new consumer
-                                        privacy laws for its citizens, companies around the world are updating their
-                                        terms of service agreements to comply.
-                                    </p>
-                                    <p class="leading-relaxed text-body">
-                                        The European Union’s General Data Protection Regulation (G.D.P.R.) goes into
-                                        effect on May 25 and is meant to ensure a common set of data rights in the
-                                        European Union. It requires organizations to notify users as soon as possible of
-                                        high-risk data breaches that could personally affect them.
-                                    </p>
-                                </div>
-                                <!-- Modal footer -->
-                                <div class="flex items-center border-t border-default space-x-4 pt-4 md:pt-5">
-                                    <button data-modal-hide="default-modal" type="button"
-                                        class="text-white bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">I
-                                        accept</button>
-                                    <button data-modal-hide="default-modal" type="button"
-                                        class="text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">Decline</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="p-6 m-3">
-
-                    <div id="accordion-collapse" data-accordion="collapse"
-                        class="rounded-base border border-default overflow-hidden shadow-xs">
-                        <h2 id="accordion-collapse-heading-1">
-                            <button type="button"
-                                class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-body rounded-t-base border border-t-0 border-x-0 border-b-default hover:text-heading hover:bg-neutral-secondary-medium gap-3"
-                                data-accordion-target="#accordion-collapse-body-1" aria-expanded="true"
-                                aria-controls="accordion-collapse-body-1">
-                                <span>What is Flowbite?</span>
-                                <svg data-accordion-icon class="w-5 h-5 rotate-180 shrink-0" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                    viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="m5 15 7-7 7 7" />
-                                </svg>
-                            </button>
-                        </h2>
-                        <div id="accordion-collapse-body-1"
-                            class="hidden border border-s-0 border-e-0 border-t-0 border-b-default"
-                            aria-labelledby="accordion-collapse-heading-1">
-                            <div class="p-4 md:p-5">
-                                <p class="mb-2 text-body">Flowbite is an open-source library of interactive components
-                                    built on top of Tailwind CSS including buttons, dropdowns, modals, navbars, and
-                                    more.</p>
-                                <p class="text-body">Check out this guide to learn how to <a
-                                        href="/docs/getting-started/introduction/"
-                                        class="text-fg-brand hover:underline">get started</a> and start developing
-                                    websites even faster with components on top of Tailwind CSS.</p>
-                            </div>
-                        </div>
-                        <h2 id="accordion-collapse-heading-2">
-                            <button type="button"
-                                class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-body border border-x-0 border-b-default border-t-0 hover:text-heading hover:bg-neutral-secondary-medium gap-3"
-                                data-accordion-target="#accordion-collapse-body-2" aria-expanded="false"
-                                aria-controls="accordion-collapse-body-2">
-                                <span>Is there a Figma file available?</span>
-                                <svg data-accordion-icon class="w-5 h-5 rotate-180 shrink-0" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                    viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="m5 15 7-7 7 7" />
-                                </svg>
-                            </button>
-                        </h2>
-                        <div id="accordion-collapse-body-2"
-                            class="hidden border border-s-0 border-e-0 border-t-0 border-b-default"
-                            aria-labelledby="accordion-collapse-heading-2">
-                            <div class="p-4 md:p-5">
-                                <p class="mb-2 text-body">Flowbite is first conceptualized and designed using the Figma
-                                    software so everything you see in the library has a design equivalent in our Figma
-                                    file.</p>
-                                <p class="text-body">Check out the <a href="https://flowbite.com/figma/"
-                                        class="text-fg-brand hover:underline">Figma design system</a> based on the
-                                    utility classes from Tailwind CSS and components from Flowbite.</p>
-                            </div>
-                        </div>
-                        <h2 id="accordion-collapse-heading-3">
-                            <button type="button"
-                                class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-body hover:text-heading hover:bg-neutral-secondary-medium gap-3"
-                                data-accordion-target="#accordion-collapse-body-3" aria-expanded="false"
-                                aria-controls="accordion-collapse-body-3">
-                                <span>What are the differences between Flowbite and Tailwind UI?</span>
-                                <svg data-accordion-icon class="w-5 h-5 rotate-180 shrink-0" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                    viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="m5 15 7-7 7 7" />
-                                </svg>
-                            </button>
-                        </h2>
-                        <div id="accordion-collapse-body-3" class="hidden"
-                            aria-labelledby="accordion-collapse-heading-3">
-                            <div class="p-4 md:p-5 border border-t-default border-b-0 border-x-0">
-                                <p class="mb-2 text-body">The main difference is that the core components from Flowbite
-                                    are open source under the MIT license, whereas Tailwind UI is a paid product.
-                                    Another difference is that Flowbite relies on smaller and standalone components,
-                                    whereas Tailwind UI offers sections of pages.</p>
-                                <p class="mb-2 text-body">However, we actually recommend using both Flowbite, Flowbite
-                                    Pro, and even Tailwind UI as there is no technical reason stopping you from using
-                                    the best of two worlds.</p>
-                                <p class="mb-2 text-body">Learn more about these technologies:</p>
-                                <ul class="ps-5 text-body list-disc">
-                                    <li><a href="https://flowbite.com/pro/"
-                                            class="text-fg-brand hover:underline">Flowbite Pro</a></li>
-                                    <li><a href="https://tailwindui.com/" rel="nofollow"
-                                            class="text-fg-brand hover:underline">Tailwind UI</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <input type="text" id="input-group-1"
+                    class="block w-full max-w-96 ps-9 pe-3 py-2 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand px-3 py-2.5 shadow-xs placeholder:text-body"
+                    placeholder="Search">
             </div>
         </div>
+        <table class="w-full text-sm text-left rtl:text-right text-body">
+            <thead class="text-sm text-body bg-neutral-secondary-medium border-b border-t border-default-medium">
+                <tr>
+                    <th scope="col" class="p-4">
+                        <div class="flex items-center">
+                            <input id="table-checkbox-12" type="checkbox" value=""
+                                class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft">
+                            <label for="table-checkbox-12" class="sr-only">Table checkbox</label>
+                        </div>
+                    </th>
+                    <th scope="col" class="px-6 py-3 font-medium">
+                        Product name
+                    </th>
+                    <th scope="col" class="px-6 py-3 font-medium">
+                        Color
+                    </th>
+                    <th scope="col" class="px-6 py-3 font-medium">
+                        Category
+                    </th>
+                    <th scope="col" class="px-6 py-3 font-medium">
+                        Price
+                    </th>
+                    <th scope="col" class="px-6 py-3 font-medium">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                    <td class="w-4 p-4">
+                        <div class="flex items-center">
+                            <input id="table-checkbox-13" type="checkbox" value=""
+                                class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft">
+                            <label for="table-checkbox-13" class="sr-only">Table checkbox</label>
+                        </div>
+                    </td>
+                    <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                        Apple MacBook Pro 17"
+                    </th>
+                    <td class="px-6 py-4">
+                        Silver
+                    </td>
+                    <td class="px-6 py-4">
+                        Laptop
+                    </td>
+                    <td class="px-6 py-4">
+                        $2999
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="#" class="font-medium text-fg-brand hover:underline">Edit</a>
+                    </td>
+                </tr>
+                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                    <td class="w-4 p-4">
+                        <div class="flex items-center">
+                            <input id="table-checkbox-14" type="checkbox" value=""
+                                class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft">
+                            <label for="table-checkbox-14" class="sr-only">Table checkbox</label>
+                        </div>
+                    </td>
+                    <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                        Microsoft Surface Pro
+                    </th>
+                    <td class="px-6 py-4">
+                        White
+                    </td>
+                    <td class="px-6 py-4">
+                        Laptop PC
+                    </td>
+                    <td class="px-6 py-4">
+                        $1999
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="#" class="font-medium text-fg-brand hover:underline">Edit</a>
+                    </td>
+                </tr>
+                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                    <td class="w-4 p-4">
+                        <div class="flex items-center">
+                            <input id="table-checkbox-15" type="checkbox" value=""
+                                class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft">
+                            <label for="table-checkbox-15" class="sr-only">Table checkbox</label>
+                        </div>
+                    </td>
+                    <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                        Magic Mouse 2
+                    </th>
+                    <td class="px-6 py-4">
+                        Black
+                    </td>
+                    <td class="px-6 py-4">
+                        Accessories
+                    </td>
+                    <td class="px-6 py-4">
+                        $99
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="#" class="font-medium text-fg-brand hover:underline">Edit</a>
+                    </td>
+                </tr>
+                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                    <td class="w-4 p-4">
+                        <div class="flex items-center">
+                            <input id="table-checkbox-16" type="checkbox" value=""
+                                class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft">
+                            <label for="table-checkbox-16" class="sr-only">Table checkbox</label>
+                        </div>
+                    </td>
+                    <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                        Apple Watch
+                    </th>
+                    <td class="px-6 py-4">
+                        Silver
+                    </td>
+                    <td class="px-6 py-4">
+                        Accessories
+                    </td>
+                    <td class="px-6 py-4">
+                        $179
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="#" class="font-medium text-fg-brand hover:underline">Edit</a>
+                    </td>
+                </tr>
+                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                    <td class="w-4 p-4">
+                        <div class="flex items-center">
+                            <input id="table-checkbox-17" type="checkbox" value=""
+                                class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft">
+                            <label for="table-checkbox-17" class="sr-only">Table checkbox</label>
+                        </div>
+                    </td>
+                    <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                        iPad
+                    </th>
+                    <td class="px-6 py-4">
+                        Gold
+                    </td>
+                    <td class="px-6 py-4">
+                        Tablet
+                    </td>
+                    <td class="px-6 py-4">
+                        $699
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="#" class="font-medium text-fg-brand hover:underline">Edit</a>
+                    </td>
+                </tr>
+                <tr class="bg-neutral-primary-soft hover:bg-neutral-secondary-medium">
+                    <td class="w-4 p-4">
+                        <div class="flex items-center">
+                            <input id="table-checkbox-18" type="checkbox" value=""
+                                class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft">
+                            <label for="table-checkbox-18" class="sr-only">Table checkbox</label>
+                        </div>
+                    </td>
+                    <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                        Apple iMac 27"
+                    </th>
+                    <td class="px-6 py-4">
+                        Silver
+                    </td>
+                    <td class="px-6 py-4">
+                        PC Desktop
+                    </td>
+                    <td class="px-6 py-4">
+                        $3999
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="#" class="font-medium text-fg-brand hover:underline">Edit</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+
 </x-app-layout>
