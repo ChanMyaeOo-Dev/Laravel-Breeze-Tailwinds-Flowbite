@@ -11,7 +11,7 @@ class MenuHelper
                 'icon' => 'dashboard',
                 'name' => 'Dashboard',
                 'subItems' => [
-                    ['name' => 'Ecommerce', 'path' => '/'],
+                    ['name' => 'Dashboard', 'path' => 'dashboard'],
                 ],
             ],
             [
@@ -28,22 +28,22 @@ class MenuHelper
                 'name' => 'Forms',
                 'icon' => 'forms',
                 'subItems' => [
-                    ['name' => 'Form Elements', 'path' => '/form-elements', 'pro' => false],
+                    ['name' => 'Form Elements', 'path' => '/', 'pro' => false],
                 ],
             ],
             [
                 'name' => 'Tables',
                 'icon' => 'tables',
                 'subItems' => [
-                    ['name' => 'Basic Tables', 'path' => '/basic-tables', 'pro' => false]
+                    ['name' => 'Basic Tables', 'path' => '/', 'pro' => false]
                 ],
             ],
             [
                 'name' => 'Pages',
                 'icon' => 'pages',
                 'subItems' => [
-                    ['name' => 'Blank Page', 'path' => '/blank', 'pro' => false],
-                    ['name' => '404 Error', 'path' => '/error-404', 'pro' => false]
+                    ['name' => 'Blank Page', 'path' => '/', 'pro' => false],
+                    ['name' => '404 Error', 'path' => '/', 'pro' => false]
                 ],
             ],
         ];
@@ -97,9 +97,9 @@ class MenuHelper
         ];
     }
 
-    public static function isActive($path)
+    public static function isActive($currentPath = null, $path = null)
     {
-        return request()->is(ltrim($path, '/'));
+        return $currentPath == $path;
     }
 
     public static function getIconSvg($iconName)
