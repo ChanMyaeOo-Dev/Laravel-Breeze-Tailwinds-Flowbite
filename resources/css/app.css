@@ -64,6 +64,24 @@
     }
 }
 
+#DataTable_wrapper > div:nth-child(1) {
+    @apply mt-6 flex flex-col items-start justify-between md:items-center md:justify-between md:flex-row;
+}
+
+#DataTable_wrapper > div:nth-child(3) {
+    @apply mt-6 flex flex-col items-start justify-between md:items-center md:justify-between md:flex-row;
+}
+
+#DataTable_wrapper select {
+    @apply w-18 rounded ms-0.5;
+}
+
+#DataTable_wrapper .dt-search {
+    input {
+        @apply rounded me-0.5;
+    }
+}
+
 .gradient-bg {
     background: #fafafa;
     background: linear-gradient(

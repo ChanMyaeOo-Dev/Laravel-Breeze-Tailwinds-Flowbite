@@ -6,10 +6,10 @@
 <aside class="py-4 ps-4 fixed top-0 left-0 w-64 h-screen z-[60] transition-transform -translate-x-full md:translate-x-0"
     aria-label="Sidenav" id="drawer-navigation">
     <div
-        class="h-full border border-neutral-300 rounded overflow-y-auto py-5 px-3 bg-white/80 dark:bg-neutral-800 scrollbar-thin scrollbar-thumb-neutral-300 scrollbar-track-neutral-100">
+        class="h-full border border-neutral-300 rounded overflow-y-auto py-5 px-3 bg-white dark:bg-neutral-800 scrollbar-thin scrollbar-thumb-neutral-300 scrollbar-track-neutral-100">
 
         <div class="flex justify-start items-center mb-6">
-            <a href="https://flowbite.com" class="flex items-center justify-start mx-1">
+            <a href="{{ route('/') }}" class="flex items-center justify-start mx-1">
                 <img src="{{ asset('assets/images/smart_serve_logo.png') }}" class="mr-3 h-8" alt="Flowbite Logo" />
                 <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
                     SmartServe

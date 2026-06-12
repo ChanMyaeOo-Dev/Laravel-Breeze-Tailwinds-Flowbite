@@ -1,10 +1,4 @@
 <x-app-layout>
-    {{-- <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot> --}}
-
     <div class="flex items-center justify-between mb-4">
         <div class="flex items-center gap-2">
             {{-- <button type="button" class="btn-sm">
@@ -27,90 +21,7 @@
     </div>
 
     <div class="relative overflow-x-auto">
-        <div class="ps-0.5 py-4 flex items-center gap-3">
-
-            <div>
-                <label for="input-group-1" class="sr-only">Search</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <svg class="w-4 h-4 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                            width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
-                                d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
-                        </svg>
-                    </div>
-                    <input type="text" id="input-group-1"
-                        class="block w-full max-w-96 ps-9 pe-3 h-10 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded focus:ring-brand focus:border-brand px-3 py-2.5 placeholder:text-body"
-                        placeholder="Search">
-                </div>
-            </div>
-
-            <button id="dropdownDefaultButton" data-dropdown-toggle="filter_dropdown" class="drop-down" type="button">
-                Filter By
-                <svg class="w-4 h-4 ms-1.5 -me-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                    height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="m19 9-7 7-7-7" />
-                </svg>
-            </button>
-
-            <button id="dropdownDefaultButton" data-dropdown-toggle="sort_dropdown" class="drop-down" type="button">
-                Sort By
-                <svg class="w-4 h-4 ms-1.5 -me-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                    height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="m19 9-7 7-7-7" />
-                </svg>
-            </button>
-
-            <div id="filter_dropdown"
-                class="z-10 hidden bg-neutral-primary-medium border border-default-medium rounded shadow-lg w-44">
-                <ul class="p-2 text-sm text-body font-medium" aria-labelledby="dropdownDefaultButton">
-                    <li>
-                        <a href="#"
-                            class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Dashboard</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Settings</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Earnings</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Sign
-                            out</a>
-                    </li>
-                </ul>
-            </div>
-
-            <div id="sort_dropdown"
-                class="z-10 hidden bg-neutral-primary-medium border border-default-medium rounded shadow-lg w-44">
-                <ul class="p-2 text-sm text-body font-medium" aria-labelledby="dropdownDefaultButton">
-                    <li>
-                        <a href="#"
-                            class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Dashboard</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Settings</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Earnings</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Sign
-                            out</a>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-        <table class="w-full text-sm text-left rtl:text-right text-body">
+        <table id="DataTable" class="w-full text-sm text-left rtl:text-right text-body">
             <thead class="text-sm text-body bg-neutral-secondary-medium border-b border-t border-default-medium">
                 <tr>
                     <th scope="col" class="p-4">
@@ -286,40 +197,13 @@
         </table>
     </div>
 
-    <div class="w-full flex items-end justify-end mt-4">
-        <nav aria-label="Page navigation example">
-            <ul class="flex -space-x-px text-sm">
-                <li>
-                    <a href="#"
-                        class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-s-base text-sm px-3 h-9 focus:outline-none">Previous</a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium text-sm w-9 h-9 focus:outline-none">1</a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium text-sm w-9 h-9 focus:outline-none">2</a>
-                </li>
-                <li>
-                    <a href="#" aria-current="page"
-                        class="flex items-center justify-center text-fg-brand bg-neutral-tertiary-medium box-border border border-default-medium hover:text-fg-brand font-medium text-sm w-9 h-9 focus:outline-none">3</a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium text-sm w-9 h-9 focus:outline-none">4</a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium text-sm w-9 h-9 focus:outline-none">5</a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-e-base text-sm px-3 h-9 focus:outline-none">Next</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-
+    @push('scripts')
+        <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+        <script src="https://cdn.datatables.net/2.3.8/js/dataTables.js"></script>
+        <script src="https://cdn.datatables.net/2.3.8/js/dataTables.tailwindcss.js"></script>
+        <script>
+            let table = new DataTable('#DataTable');
+        </script>
+    @endpush
 
 </x-app-layout>
