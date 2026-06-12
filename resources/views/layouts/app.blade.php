@@ -49,11 +49,16 @@
 </head>
 
 <body>
-    <div class="antialiased bg-gray-100 dark:bg-gray-900">
+    <div class="antialiased bg-neutral-50 fixed top-0 left-0 w-full h-full">
         <x-side-bar />
-        <main class="p-4 md:ml-64 min-h-screen">
-            <x-nav-bar />
-            {{ $slot }}
+        <main class="p-4 md:ml-64 h-screen max-h-screen">
+            <div class="w-full h-full bg-white rounded">
+                <div
+                    class="bg-white border border-neutral-200 rounded h-full p-4 overflow-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                    <x-nav-bar />
+                    {{ $slot }}
+                </div>
+            </div>
         </main>
     </div>
     <script src="{{ asset('assets/js/flowbite.min.js') }}"></script>

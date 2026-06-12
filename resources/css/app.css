@@ -19,6 +19,7 @@
     --color-primary-50: #373737;
     --color-secondary: #171717;
     --color-dark: #171717;
+    --color-dark-50: #171717;
     --color-white: #ffffff;
     --color-light: #fafafa;
     --color-info: #eab308;
@@ -36,7 +37,10 @@
     }
 
     .btn-sm {
-        @apply inline-flex items-center text-white bg-primary hover:bg-primary-50 box-border border border-transparent focus:ring-4 focus:ring-brand-medium font-medium leading-5 rounded text-sm p-1.5 focus:outline-none;
+        @apply inline-flex items-center text-white bg-dark hover:bg-dark-50 box-border border border-transparent focus:ring-4 focus:ring-brand-medium font-medium leading-5 rounded text-sm p-1.5 focus:outline-none;
+    }
+    .btn-primary {
+        @apply inline-flex items-center text-white bg-primary hover:bg-primary-50 box-border border border-transparent focus:ring-4 focus:ring-brand-medium font-medium leading-5 rounded text-sm px-4 py-2 focus:outline-none;
     }
     .active {
         @apply !text-white bg-primary hover:!bg-primary-50;
