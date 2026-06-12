@@ -6,7 +6,9 @@
     </x-slot> --}}
 
 
-
+    <div class="p-5 m-5">
+        <p class="text-primary">Welcome to the Dashboard</p>
+    </div>
     <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
         <div class="p-4">
             <label for="input-group-1" class="sr-only">Search</label>

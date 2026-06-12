@@ -53,7 +53,7 @@
                             @foreach ($item['subItems'] as $subItem)
                                 <li>
                                     <a href="{{ route($subItem['path']) }}"
-                                        class="{{ $isActive ? 'bg-blue-500' : '' }} flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-sm transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                                        class="{{ MenuHelper::isActive($currentPath, $subItem['path']) ? 'active' : '' }} flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-sm transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                                         {{ $subItem['name'] }}
                                     </a>
                                 </li>
@@ -61,7 +61,7 @@
                         </ul>
                     @else
                         <a href="{{ $item['path'] }}"
-                            class="{{ MenuHelper::isActive($currentPath, $item['path']) ? 'bg-blue-500' : '' }} flex items-center p-2 text-base font-medium text-gray-900 rounded-sm transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group">
+                            class="{{ MenuHelper::isActive($currentPath, $item['path']) ? 'active' : '' }} flex items-center p-2 text-base font-medium text-gray-900 rounded-sm transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group">
                             {!! MenuHelper::getIconSvg($item['icon']) !!}
                             <span class="ml-3">{{ $item['name'] }}</span>
                         </a>

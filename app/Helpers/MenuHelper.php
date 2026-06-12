@@ -12,6 +12,7 @@ class MenuHelper
                 'name' => 'Dashboard',
                 'subItems' => [
                     ['name' => 'Dashboard', 'path' => 'dashboard'],
+                    ['name' => 'Dashboard 2', 'path' => '/'],
                 ],
             ],
             [
