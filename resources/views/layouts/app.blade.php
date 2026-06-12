@@ -49,9 +49,9 @@
 </head>
 
 <body>
+    <x-side-bar />
     <div class="antialiased bg-neutral-50 fixed top-0 left-0 w-full h-full">
-        <x-side-bar />
-        <main class="p-4 md:ml-64 h-screen max-h-screen">
+        <main class="relative z-0 p-4 md:ml-64 h-screen max-h-screen">
             <div class="w-full h-full bg-white rounded">
                 <div
                     class="bg-white border border-neutral-200 rounded h-full p-4 overflow-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">

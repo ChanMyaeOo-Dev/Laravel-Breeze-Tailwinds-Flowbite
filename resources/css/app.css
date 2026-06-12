@@ -46,3 +46,13 @@
         @apply !text-white bg-primary hover:!bg-primary-50;
     }
 }
+
+@layer components {
+    #drawer-navigation {
+        z-index: 60 !important;
+    }
+
+    [drawer-backdrop] {
+        z-index: 40 !important;
+    }
+}

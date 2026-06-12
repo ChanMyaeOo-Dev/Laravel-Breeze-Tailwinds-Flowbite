@@ -3,7 +3,7 @@
     $menuGroups = MenuHelper::getMenuGroups();
     $currentPath = request()->path();
 @endphp
-<aside class="py-4 ps-4 fixed top-0 left-0 w-70 h-screen z-50 transition-transform -translate-x-full md:translate-x-0"
+<aside class="py-4 ps-4 fixed top-0 left-0 w-64 h-screen z-[60] transition-transform -translate-x-full md:translate-x-0"
     aria-label="Sidenav" id="drawer-navigation">
     <div class="h-full border border-gray-200 rounded overflow-y-auto py-5 px-3 bg-white dark:bg-gray-800">
 
