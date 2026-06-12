@@ -5,10 +5,22 @@
         </h2>
     </x-slot> --}}
 
+    <div class="card mb-4">
+        <div class="flex items-center gap-2">
 
-    <div class="p-5 m-5">
-        <p class="text-primary">Welcome to the Dashboard</p>
+            <button type="button" class="btn-sm">
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m17 16-4-4 4-4m-6 8-4-4 4-4" />
+                </svg>
+            </button>
+            <span class="text-2xl font-semibold whitespace-nowrap dark:text-white">
+                Dashboard
+            </span>
+        </div>
     </div>
+
     <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
         <div class="p-4">
             <label for="input-group-1" class="sr-only">Search</label>

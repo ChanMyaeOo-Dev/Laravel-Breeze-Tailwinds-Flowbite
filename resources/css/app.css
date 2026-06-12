@@ -16,6 +16,7 @@
         "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
     --color-primary: #171717;
+    --color-primary-50: #373737;
     --color-secondary: #171717;
     --color-dark: #171717;
     --color-white: #ffffff;
@@ -33,9 +34,11 @@
     ::file-selector-button {
         border-color: var(--color-gray-200, currentcolor);
     }
-}
 
-.active {
-    background-color: var(--color-primary);
-    color: var(--color-white);
+    .btn-sm {
+        @apply inline-flex items-center text-white bg-primary hover:bg-primary-50 box-border border border-transparent focus:ring-4 focus:ring-brand-medium font-medium leading-5 rounded text-sm p-1.5 focus:outline-none;
+    }
+    .active {
+        @apply !text-white bg-primary hover:!bg-primary-50;
+    }
 }

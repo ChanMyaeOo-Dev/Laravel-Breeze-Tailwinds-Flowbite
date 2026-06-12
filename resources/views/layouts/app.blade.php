@@ -49,30 +49,13 @@
 </head>
 
 <body>
-    <div class="antialiased bg-gray-50 dark:bg-gray-900">
-        <x-nav-bar />
+    <div class="antialiased bg-gray-100 dark:bg-gray-900">
         <x-side-bar />
-        <main class="p-4 md:ml-64 min-h-screen pt-20">
+        <main class="p-4 md:ml-64 min-h-screen">
+            <x-nav-bar />
             {{ $slot }}
         </main>
     </div>
-    {{-- <div class="min-h-screen bg-gray-100">
-        @include('layouts.navigation')
-
-        <!-- Page Heading -->
-        @isset($header)
-            <header class="bg-white shadow-sm">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endisset
-
-        <!-- Page Content -->
-        <main>
-            {{ $slot }}
-        </main>
-    </div> --}}
     <script src="{{ asset('assets/js/flowbite.min.js') }}"></script>
     <script>
         var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
