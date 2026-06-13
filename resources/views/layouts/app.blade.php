@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- Primary Meta Tags -->
+    <!-- brand Meta Tags -->
     <title>{{ env('APP_NAME', 'Admin Dashboard - CMO') }}</title>
     <meta name="title" content="{{ env('APP_NAME', 'Admin Dashboard - CMO') }}" />
     <meta name="description" content="Admin Dashboard template using Laravel, Tailwinds, Blade and Flowbite." />
@@ -54,8 +54,8 @@
         <main class="relative z-0 p-4 md:ml-64 h-screen max-h-screen">
             <div class="w-full h-full bg-white rounded">
                 <div
-                    class="bg-white border border-neutral-300 rounded h-full p-4 overflow-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                    <x-nav-bar />
+                    class="bg-white border border-neutral-300 rounded h-full p-6 overflow-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                    {{-- <x-nav-bar /> --}}
                     {{ $slot }}
                 </div>
             </div>

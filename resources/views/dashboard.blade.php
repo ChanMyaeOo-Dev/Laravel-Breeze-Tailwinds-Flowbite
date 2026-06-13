@@ -49,7 +49,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                <tr class="bg-neutral-brand-soft border-b border-default hover:bg-neutral-secondary-medium">
                     <td class="w-4 p-4">
                         <div class="flex items-center">
                             <input id="table-checkbox-13" type="checkbox" value=""
@@ -73,7 +73,7 @@
                         <a href="#" class="font-medium text-fg-brand hover:underline">Edit</a>
                     </td>
                 </tr>
-                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                <tr class="bg-neutral-brand-soft border-b border-default hover:bg-neutral-secondary-medium">
                     <td class="w-4 p-4">
                         <div class="flex items-center">
                             <input id="table-checkbox-14" type="checkbox" value=""
@@ -97,7 +97,7 @@
                         <a href="#" class="font-medium text-fg-brand hover:underline">Edit</a>
                     </td>
                 </tr>
-                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                <tr class="bg-neutral-brand-soft border-b border-default hover:bg-neutral-secondary-medium">
                     <td class="w-4 p-4">
                         <div class="flex items-center">
                             <input id="table-checkbox-15" type="checkbox" value=""
@@ -121,7 +121,7 @@
                         <a href="#" class="font-medium text-fg-brand hover:underline">Edit</a>
                     </td>
                 </tr>
-                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                <tr class="bg-neutral-brand-soft border-b border-default hover:bg-neutral-secondary-medium">
                     <td class="w-4 p-4">
                         <div class="flex items-center">
                             <input id="table-checkbox-16" type="checkbox" value=""
@@ -145,7 +145,7 @@
                         <a href="#" class="font-medium text-fg-brand hover:underline">Edit</a>
                     </td>
                 </tr>
-                <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                <tr class="bg-neutral-brand-soft border-b border-default hover:bg-neutral-secondary-medium">
                     <td class="w-4 p-4">
                         <div class="flex items-center">
                             <input id="table-checkbox-17" type="checkbox" value=""
@@ -169,7 +169,7 @@
                         <a href="#" class="font-medium text-fg-brand hover:underline">Edit</a>
                     </td>
                 </tr>
-                <tr class="bg-neutral-primary-soft hover:bg-neutral-secondary-medium">
+                <tr class="bg-neutral-brand-soft hover:bg-neutral-secondary-medium">
                     <td class="w-4 p-4">
                         <div class="flex items-center">
                             <input id="table-checkbox-18" type="checkbox" value=""

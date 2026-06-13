@@ -17,10 +17,8 @@
 
     --text-base: 0.9rem;
 
-    --color-brand: #171717;
-    --color-brand-soft: #f5f5f5;
-    --color-primary: #171717;
-    --color-primary-50: #373737;
+    --color-brand: #84cc16;
+    --color-brand-soft: #f7fee7;
     --color-secondary: #171717;
     --color-dark: #171717;
     --color-dark-50: #171717;
@@ -44,13 +42,13 @@
         @apply inline-flex items-center text-white bg-dark hover:bg-dark-50 box-border border border-transparent focus:ring-4 focus:ring-brand-medium font-medium leading-5 rounded text-sm p-1.5 focus:outline-none;
     }
     .btn-primary {
-        @apply inline-flex items-center text-white bg-primary hover:bg-primary-50 box-border border border-transparent focus:ring-4 focus:ring-brand-medium font-medium leading-5 rounded text-sm px-4 py-2 focus:outline-none;
+        @apply inline-flex items-center text-white bg-brand hover:bg-brand-soft box-border border border-transparent focus:ring-4 focus:ring-brand-medium font-medium leading-5 rounded text-sm px-4 py-2 focus:outline-none;
     }
     .drop-down {
         @apply inline-flex items-center justify-center text-dark bg-white box-border border border-brand-soft hover:bg-brand-soft focus:ring-4 focus:ring-brand-soft font-medium leading-5 rounded text-sm px-4 h-10 focus:outline-none;
     }
     .active {
-        @apply !text-white bg-primary hover:!bg-primary-50;
+        @apply !text-dark !bg-brand-soft !border-s-3 !rounded-none !border-brand hover:!bg-brand-soft;
     }
 }
 

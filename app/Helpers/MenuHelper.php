@@ -46,38 +46,6 @@ class MenuHelper
                     ['name' => 'Blank Page', 'path' => '/', 'pro' => false],
                     ['name' => '404 Error', 'path' => '/', 'pro' => false]
                 ],
-            ],
-            [
-                'name' => 'Pages',
-                'icon' => 'pages',
-                'subItems' => [
-                    ['name' => 'Blank Page', 'path' => '/', 'pro' => false],
-                    ['name' => '404 Error', 'path' => '/', 'pro' => false]
-                ],
-            ],
-            [
-                'name' => 'Pages',
-                'icon' => 'pages',
-                'subItems' => [
-                    ['name' => 'Blank Page', 'path' => '/', 'pro' => false],
-                    ['name' => '404 Error', 'path' => '/', 'pro' => false]
-                ],
-            ],
-            [
-                'name' => 'Pages',
-                'icon' => 'pages',
-                'subItems' => [
-                    ['name' => 'Blank Page', 'path' => '/', 'pro' => false],
-                    ['name' => '404 Error', 'path' => '/', 'pro' => false]
-                ],
-            ],
-            [
-                'name' => 'Pages',
-                'icon' => 'pages',
-                'subItems' => [
-                    ['name' => 'Blank Page', 'path' => '/', 'pro' => false],
-                    ['name' => '404 Error', 'path' => '/', 'pro' => false]
-                ],
             ]
         ];
     }
