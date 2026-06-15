@@ -6,12 +6,12 @@
 <aside class="py-4 ps-4 fixed top-0 left-0 w-64 h-screen z-[60] transition-transform -translate-x-full md:translate-x-0"
     aria-label="Sidenav" id="drawer-navigation">
     <div
-        class="relative h-full border border-neutral-300 rounded overflow-y-auto py-5 px-3 bg-white dark:bg-neutral-800 scrollbar-thin scrollbar-thumb-neutral-300 scrollbar-track-neutral-100">
+        class="relative h-full border border-neutral-300 rounded overflow-y-auto py-5 px-3 bg-brand dark:bg-neutral-800 scrollbar-thin scrollbar-thumb-neutral-300 scrollbar-track-neutral-100">
 
         <div class="flex justify-start items-center mb-6">
-            <a href="{{ route('/') }}" class="flex items-center justify-start mx-1">
+            <a href="{{ route('/') }}" class="text-white flex items-center justify-start mx-1">
                 <img src="{{ asset('assets/images/smart_serve_logo.png') }}" class="mr-3 h-8" alt="Flowbite Logo" />
-                <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+                <span class="self-center text-xl font-semibold whitespace-nowrap">
                     SmartServe
                 </span>
             </a>
@@ -38,7 +38,7 @@
                 <li>
                     @if (isset($item['subItems']))
                         <button type="button"
-                            class="flex items-center px-1 py-1.5 w-full text-base font-medium text-neutral-900 rounded-sm transition duration-75 group hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700"
+                            class="text-white flex items-center px-1 py-1.5 w-full text-base font-medium rounded-sm transition duration-75 group hover:bg-brand-soft dark:text-white dark:hover:bg-neutral-700"
                             aria-controls="dropdown-{{ $item['name'] }}"
                             data-collapse-toggle="dropdown-{{ $item['name'] }}">
                             {!! MenuHelper::getIconSvg($item['icon']) !!}
@@ -62,7 +62,7 @@
                             @foreach ($item['subItems'] as $subItem)
                                 <li>
                                     <a href="{{ route($subItem['path']) }}"
-                                        class="{{ MenuHelper::isActive($currentPath, $subItem['path']) ? 'active' : '' }} flex items-center px-1 py-1.5 pl-11 w-full text-base font-medium text-neutral-900 rounded-sm transition duration-75 group hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700">
+                                        class="{{ MenuHelper::isActive($currentPath, $subItem['path']) ? 'active' : '' }} flex items-center px-1 py-1.5 pl-11 w-full text-base font-medium text-white rounded-sm transition duration-75 group hover:bg-brand-soft dark:text-white dark:hover:bg-neutral-700">
                                         {{ $subItem['name'] }}
                                     </a>
                                 </li>
@@ -70,7 +70,7 @@
                         </ul>
                     @else
                         <a href="{{ $item['path'] }}"
-                            class="{{ MenuHelper::isActive($currentPath, $item['path']) ? 'active' : '' }} flex items-center px-1 py-1.5 text-base font-medium text-neutral-900 rounded-sm transition duration-75 hover:bg-neutral-100 dark:hover:bg-neutral-700 dark:text-white group">
+                            class="{{ MenuHelper::isActive($currentPath, $item['path']) ? 'active' : '' }} flex items-center px-1 py-1.5 text-base font-medium text-white rounded-sm transition duration-75 hover:bg-brand-soft dark:hover:bg-neutral-700 dark:text-white group">
                             {!! MenuHelper::getIconSvg($item['icon']) !!}
                             <span class="ml-3">{{ $item['name'] }}</span>
                         </a>

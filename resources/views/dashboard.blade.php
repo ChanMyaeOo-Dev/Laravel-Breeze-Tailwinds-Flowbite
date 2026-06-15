@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Dashboard">
     <div class="flex items-center justify-between mb-4">
         <div class="flex items-center gap-2">
             {{-- <button type="button" class="btn-sm">
@@ -9,7 +9,7 @@
                 </svg>
             </button> --}}
             <div class="flex flex-col">
-                <span class="text-2xl font-semibold whitespace-nowrap dark:text-white">
+                <span class="text-2xl text-brand font-semibold whitespace-nowrap dark:text-white">
                     Dashboard
                 </span>
             </div>

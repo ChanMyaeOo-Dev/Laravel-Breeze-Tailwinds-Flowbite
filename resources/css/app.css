@@ -17,8 +17,8 @@
 
     --text-base: 0.9rem;
 
-    --color-brand: #84cc16;
-    --color-brand-soft: #f7fee7;
+    --color-brand: #134e4a;
+    --color-brand-soft: #0f766e;
     --color-secondary: #171717;
     --color-dark: #171717;
     --color-dark-50: #171717;
@@ -48,7 +48,7 @@
         @apply inline-flex items-center justify-center text-dark bg-white box-border border border-brand-soft hover:bg-brand-soft focus:ring-4 focus:ring-brand-soft font-medium leading-5 rounded text-sm px-4 h-10 focus:outline-none;
     }
     .active {
-        @apply !text-dark !bg-brand-soft !border-s-3 !rounded-none !border-brand hover:!bg-brand-soft;
+        @apply !text-white !bg-brand-soft !border-s-3 !rounded-none !border-white hover:!bg-brand-soft;
     }
 }
 

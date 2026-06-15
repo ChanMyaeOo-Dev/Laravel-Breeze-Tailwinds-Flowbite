@@ -7,7 +7,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- brand Meta Tags -->
-    <title>{{ env('APP_NAME', 'Admin Dashboard - CMO') }}</title>
+    @props(['title' => env('APP_NAME', 'SmartServe')])
+
+    <title>{{ $title . ' | Smart Serve' }}</title>
     <meta name="title" content="{{ env('APP_NAME', 'Admin Dashboard - CMO') }}" />
     <meta name="description" content="Admin Dashboard template using Laravel, Tailwinds, Blade and Flowbite." />
 
