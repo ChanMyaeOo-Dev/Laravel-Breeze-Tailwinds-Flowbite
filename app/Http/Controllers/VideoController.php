@@ -53,7 +53,7 @@ class VideoController extends Controller
             // Generate presigned URL valid for 60 minutes
             $presignedUrl = $disk->temporaryUploadUrl(
                 $filePath,
-                now()->addMinutes(60),
+                now()->addMinutes(180),
                 [
                     'ContentType' => $request->content_type,
                 ]
