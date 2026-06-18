@@ -1,8 +1,14 @@
 @props([
     'name' => 'video_url',
     'pathName' => null,
+    'originalNameName' => null,
+    'fileSizeName' => null,
+    'contentTypeName' => null,
     'value' => '',
     'pathValue' => '',
+    'originalNameValue' => '',
+    'fileSizeValue' => '',
+    'contentTypeValue' => '',
     'label' => 'Video Upload',
     'description' => 'Upload videos directly to Supabase Storage.',
     'buttonText' => 'Upload Video',
@@ -26,6 +32,9 @@
     selectedFile: null,
     uploadedUrl: @js($value),
     uploadedPath: @js($pathValue),
+    uploadedOriginalName: @js($originalNameValue),
+    uploadedFileSize: @js($fileSizeValue),
+    uploadedContentType: @js($contentTypeValue),
     fileName: '',
     fileSize: '',
     fileType: '',
@@ -61,6 +70,9 @@
         this.error = '';
         this.uploadedUrl = '';
         this.uploadedPath = '';
+        this.uploadedOriginalName = '';
+        this.uploadedFileSize = '';
+        this.uploadedContentType = '';
         this.progress = 0;
         this.progressText = '';
 
@@ -141,6 +153,9 @@
 
             this.uploadedUrl = data.public_url || confirmData.url;
             this.uploadedPath = data.file_path;
+            this.uploadedOriginalName = this.selectedFile.name;
+            this.uploadedFileSize = confirmData.file_size || this.selectedFile.size;
+            this.uploadedContentType = this.selectedFile.type;
             this.progress = 100;
             this.progressText = 'Upload complete';
 
@@ -239,6 +254,9 @@
         this.selectedFile = null;
         this.uploadedUrl = '';
         this.uploadedPath = '';
+        this.uploadedOriginalName = '';
+        this.uploadedFileSize = '';
+        this.uploadedContentType = '';
         this.fileName = '';
         this.fileSize = '';
         this.fileType = '';
@@ -277,6 +295,18 @@
 
     @if ($pathName)
         <input type="hidden" name="{{ $pathName }}" x-model="uploadedPath">
+    @endif
+
+    @if ($originalNameName)
+        <input type="hidden" name="{{ $originalNameName }}" x-model="uploadedOriginalName">
+    @endif
+
+    @if ($fileSizeName)
+        <input type="hidden" name="{{ $fileSizeName }}" x-model="uploadedFileSize">
+    @endif
+
+    @if ($contentTypeName)
+        <input type="hidden" name="{{ $contentTypeName }}" x-model="uploadedContentType">
     @endif
 
     <div>

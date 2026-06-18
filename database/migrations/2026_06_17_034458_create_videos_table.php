@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
+            $table->string("name");
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             $table->string('original_name');
             $table->string('s3_path');

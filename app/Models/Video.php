@@ -12,6 +12,7 @@ class Video extends Model
 
     protected $fillable = [
         'user_id',
+        'name',
         'original_name',
         's3_path',
         'file_size',
