@@ -11,9 +11,11 @@ class VideoController extends Controller
 {
     public function index(VideoStorageService $videoStorage)
     {
+        $videos = Video::all();
         return view('videos.upload', [
             'maxUploadMb' => $videoStorage->maxUploadMb(),
             'maxUploadBytes' => $videoStorage->maxUploadBytes(),
+            'videos' => $videos
         ]);
     }
 
@@ -42,6 +44,8 @@ class VideoController extends Controller
             ]);
 
             if ($request->expectsJson()) {
+                session()->flash('success', 'Video saved successfully.');
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Video saved successfully.',

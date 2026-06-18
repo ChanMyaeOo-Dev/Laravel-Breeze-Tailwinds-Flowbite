@@ -15,9 +15,10 @@
 @php
     $maxUploadBytes = $maxUploadBytes ?? (int) $maxUploadMb * 1024 * 1024;
     $invalidTypeMessage = "Invalid file type. Please select {$supportedFormats} files.";
+    $componentId = 'video-upload-' . str_replace('-', '', (string) Illuminate\Support\Str::uuid());
 @endphp
 
-<div {{ $attributes->merge(['class' => 'space-y-4']) }} x-data="{
+<div id="{{ $componentId }}" {{ $attributes->merge(['class' => 'space-y-4']) }} x-data="{
     selectedFile: null,
     fileName: '',
     fileSize: '',
@@ -153,4 +154,164 @@
 
     <div x-show="error" x-cloak class="rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
         x-text="error"></div>
+
+    <div data-video-upload-form-error
+        class="hidden rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"></div>
+
+    <div data-video-upload-progress class="hidden space-y-2">
+        <div class="h-3 overflow-hidden rounded bg-gray-200">
+            <div data-video-upload-progress-fill class="h-full rounded bg-success transition-all" style="width: 0%">
+            </div>
+        </div>
+        <p data-video-upload-progress-text class="text-center text-xs text-gray-500">Preparing upload...</p>
+    </div>
 </div>
+
+<script>
+    (() => {
+        const boot = () => {
+            const root = document.getElementById(@js($componentId));
+
+            if (!root) {
+                return;
+            }
+
+            const form = root.closest('form');
+
+            if (!form || form.dataset.videoUploadBound === 'true') {
+                return;
+            }
+
+            form.dataset.videoUploadBound = 'true';
+
+            const submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
+            const progress = root.querySelector('[data-video-upload-progress]');
+            const progressFill = root.querySelector('[data-video-upload-progress-fill]');
+            const progressText = root.querySelector('[data-video-upload-progress-text]');
+            const formError = root.querySelector('[data-video-upload-form-error]');
+            const originalSubmitText = submitButton ? submitButton.textContent : '';
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const xhr = new XMLHttpRequest();
+                const formData = new FormData(form);
+                const uploadStartTime = Date.now();
+
+                hideError();
+                showProgress('Preparing upload...', 0);
+                setSubmitState(true, 'Uploading...');
+
+                xhr.upload.addEventListener('progress', function(progressEvent) {
+                    if (!progressEvent.lengthComputable) {
+                        return;
+                    }
+
+                    const percentComplete = Math.round((progressEvent.loaded / progressEvent
+                        .total) * 100);
+                    const elapsed = (Date.now() - uploadStartTime) / 1000;
+                    const speed = elapsed > 0 ? progressEvent.loaded / elapsed : 0;
+
+                    if (percentComplete >= 100) {
+                        setSubmitState(true, 'Saving...');
+                        showProgress('Upload received. Saving video to storage...', 100);
+                        return;
+                    }
+
+                    showProgress(
+                        percentComplete + '% - ' +
+                        formatFileSize(progressEvent.loaded) + ' / ' +
+                        formatFileSize(progressEvent.total) +
+                        ' (' + formatFileSize(speed) + '/s)',
+                        percentComplete,
+                    );
+                });
+
+                xhr.addEventListener('load', function() {
+                    let response = {};
+
+                    try {
+                        response = JSON.parse(xhr.responseText);
+                    } catch (error) {}
+
+                    if (xhr.status >= 200 && xhr.status < 300 && response.success) {
+                        showProgress('Video saved. Refreshing...', 100);
+                        window.location.href = response.redirect || window.location.href;
+                        return;
+                    }
+
+                    showUploadError(response.message || firstValidationError(response.errors) ||
+                        'Upload failed. Please try again.');
+                });
+
+                xhr.addEventListener('error', function() {
+                    showUploadError(
+                        'Network error. Please check your connection and try again.');
+                });
+
+                xhr.addEventListener('abort', function() {
+                    showUploadError('Upload cancelled.');
+                });
+
+                xhr.open('POST', form.action);
+                xhr.setRequestHeader('Accept', 'application/json');
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.send(formData);
+            });
+
+            function showProgress(message, percent) {
+                progress.classList.remove('hidden');
+                progressFill.style.width = percent + '%';
+                progressText.textContent = message;
+            }
+
+            function showUploadError(message) {
+                setSubmitState(false, originalSubmitText || 'Submit');
+                progress.classList.add('hidden');
+                progressFill.style.width = '0%';
+                formError.textContent = message;
+                formError.classList.remove('hidden');
+            }
+
+            function hideError() {
+                formError.classList.add('hidden');
+                formError.textContent = '';
+            }
+
+            function setSubmitState(disabled, text) {
+                if (!submitButton) {
+                    return;
+                }
+
+                submitButton.disabled = disabled;
+                submitButton.textContent = text;
+            }
+
+            function firstValidationError(errors) {
+                if (!errors) {
+                    return null;
+                }
+
+                const firstKey = Object.keys(errors)[0];
+                return firstKey ? errors[firstKey][0] : null;
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) {
+                    return '0 Bytes';
+                }
+
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+                const index = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, index)).toFixed(2)) + ' ' + sizes[index];
+            }
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', boot);
+        } else {
+            boot();
+        }
+    })();
+</script>
