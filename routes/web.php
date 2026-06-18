@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Storage;
 
 Route::get('/videos/upload', [VideoController::class, 'index'])->name('videos.upload');
 Route::post('/videos', [VideoController::class, 'store'])->name('videos.store');
-Route::post('/videos/presigned-url', [VideoController::class, 'getPresignedUrl'])->name('videos.presigned-url');
-Route::post('/videos/confirm', [VideoController::class, 'confirmUpload'])->name('videos.confirm');
 
 Route::get('/test-s3', function () {
     $results = [];

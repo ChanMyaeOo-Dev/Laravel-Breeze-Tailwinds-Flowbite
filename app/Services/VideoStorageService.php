@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -17,39 +18,33 @@ class VideoStorageService
         return $this->maxUploadMb() * 1024 * 1024;
     }
 
-    public function createTemporaryUpload(string $filename, string $contentType): array
+    public function maxUploadKilobytes(): int
     {
-        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
-        $disk = Storage::disk('s3');
-
-        $extension = pathinfo($filename, PATHINFO_EXTENSION);
-        $filePath = 'videos/' . date('Y/m/d/') . Str::uuid() . '.' . $extension;
-
-        $presignedUrl = $disk->temporaryUploadUrl(
-            $filePath,
-            now()->addMinutes(180),
-            [
-                'ContentType' => $contentType,
-            ],
-        );
-
-        return [
-            'presigned_url' => $presignedUrl,
-            'file_path' => $filePath,
-            'public_url' => $disk->url($filePath),
-        ];
+        return $this->maxUploadMb() * 1024;
     }
 
-    public function confirmUpload(string $filePath): array
+    public function upload(UploadedFile $video): array
     {
         /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
         $disk = Storage::disk('s3');
 
-        if (!$disk->exists($filePath)) {
-            throw new \RuntimeException('File not found in storage');
+        $extension = $video->getClientOriginalExtension() ?: $video->extension();
+        $filePath = 'videos/' . date('Y/m/d/') . Str::uuid() . ($extension ? '.' . $extension : '');
+        $stream = fopen($video->getRealPath(), 'r');
+
+        try {
+            $disk->put($filePath, $stream, [
+                'ContentType' => $video->getMimeType() ?: 'application/octet-stream',
+            ]);
+        } finally {
+            if (is_resource($stream)) {
+                fclose($stream);
+            }
         }
 
         return [
+            'original_name' => $video->getClientOriginalName(),
+            's3_path' => $filePath,
             'file_size' => $disk->size($filePath),
             'url' => $disk->url($filePath),
         ];
