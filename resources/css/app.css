@@ -53,6 +53,10 @@
 }
 
 @layer components {
+    [x-cloak] {
+        display: none !important;
+    }
+
     #drawer-navigation {
         z-index: 60 !important;
     }
