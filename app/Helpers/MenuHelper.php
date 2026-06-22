@@ -16,6 +16,11 @@ class MenuHelper
                 ],
             ],
             [
+                'icon' => 'ecommerce',
+                'name' => 'Restaurants',
+                'path' => 'restaurants.index',
+            ],
+            [
                 'icon' => 'calendar',
                 'name' => 'Calendar',
                 'path' => '/calendar',

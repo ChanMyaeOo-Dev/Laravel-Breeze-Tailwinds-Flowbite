@@ -7,5 +7,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('/');
     Route::get('dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
+    // Restaurants
+    Route::resource('restaurants', App\Http\Controllers\RestaurantController::class);
+
     // Menus
 });
