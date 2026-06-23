@@ -9,6 +9,7 @@ Route::middleware('auth')->group(function () {
 
     // Restaurants
     Route::resource('restaurants', App\Http\Controllers\RestaurantController::class);
+    Route::resource('menus', App\Http\Controllers\MenuController::class);
 
     // Menus
 });

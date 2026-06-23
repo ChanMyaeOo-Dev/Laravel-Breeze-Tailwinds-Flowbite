@@ -37,4 +37,8 @@ class Restaurant extends Authenticatable
             'is_active' => 'boolean',
         ];
     }
+
+    public function menus() {
+        return $this->hasMany(Menu::class);
+    }
 }

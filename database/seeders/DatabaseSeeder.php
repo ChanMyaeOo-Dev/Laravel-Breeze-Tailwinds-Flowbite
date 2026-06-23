@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Menu;
+use App\Models\Restaurant;
 use App\Models\User;
+use Database\Factories\RestaurantFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -23,5 +26,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password'=>Hash::make('password')
         ]);
+
+        Restaurant::factory(10)->has(Menu::factory(10))->create();
     }
 }

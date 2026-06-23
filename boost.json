@@ -3,7 +3,8 @@
         "cursor",
         "antigravity",
         "codex",
-        "copilot"
+        "copilot",
+        "opencode"
     ],
     "cloud": false,
     "guidelines": true,
