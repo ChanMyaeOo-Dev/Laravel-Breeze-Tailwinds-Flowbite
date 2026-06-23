@@ -12,7 +12,7 @@ class Menu extends Model
 
     protected $guarded = [];
 
-    public function restaurants()
+    public function restaurant()
     {
         return $this->belongsTo(Restaurant::class);
     }

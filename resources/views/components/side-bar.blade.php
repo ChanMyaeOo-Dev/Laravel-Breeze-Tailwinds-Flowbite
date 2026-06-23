@@ -2,6 +2,7 @@
     use App\Helpers\MenuHelper;
     $menuGroups = MenuHelper::getMenuGroups();
     $currentPath = request()->path();
+    // dd($currentPath);
 @endphp
 <aside class="py-4 ps-4 fixed top-0 left-0 w-64 h-screen z-[60] transition-transform -translate-x-full md:translate-x-0"
     aria-label="Sidenav" id="drawer-navigation">

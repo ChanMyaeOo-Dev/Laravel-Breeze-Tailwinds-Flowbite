@@ -10,7 +10,7 @@ class MenuController extends Controller
 {
     public function index()
     {
-        $menus = Menu::latest()->with('restaurants')->get();
+        $menus = Menu::latest()->with('restaurant')->get();
 
         return view('menus.index', compact('menus'));
     }

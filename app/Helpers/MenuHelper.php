@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Helpers;
+use Illuminate\Support\Str;
 
 class MenuHelper
 {
@@ -12,18 +13,17 @@ class MenuHelper
                 'name' => 'Dashboard',
                 'subItems' => [
                     ['name' => 'Dashboard', 'path' => 'dashboard'],
-                    ['name' => 'Dashboard 2', 'path' => '/'],
                 ],
             ],
             [
                 'icon' => 'ecommerce',
                 'name' => 'Restaurants',
-                'path' => 'restaurants',
+                'path' => '/restaurants',
             ],
             [
                 'icon' => 'menu',
                 'name' => 'Menus',
-                'path' => 'menus',
+                'path' => '/menus',
             ],
             [
                 'icon' => 'calendar',
@@ -39,22 +39,22 @@ class MenuHelper
                 'name' => 'Forms',
                 'icon' => 'forms',
                 'subItems' => [
-                    ['name' => 'Form Elements', 'path' => '/', 'pro' => false],
+                    ['name' => 'Form Elements', 'path' => 'dashboard', 'pro' => false],
                 ],
             ],
             [
                 'name' => 'Tables',
                 'icon' => 'tables',
                 'subItems' => [
-                    ['name' => 'Basic Tables', 'path' => '/', 'pro' => false]
+                    ['name' => 'Basic Tables', 'path' => 'dashboard', 'pro' => false]
                 ],
             ],
             [
                 'name' => 'Pages',
                 'icon' => 'pages',
                 'subItems' => [
-                    ['name' => 'Blank Page', 'path' => '/', 'pro' => false],
-                    ['name' => '404 Error', 'path' => '/', 'pro' => false]
+                    ['name' => 'Blank Page', 'path' => 'dashboard', 'pro' => false],
+                    ['name' => '404 Error', 'path' => 'dashboard', 'pro' => false]
                 ],
             ]
         ];
@@ -110,7 +110,11 @@ class MenuHelper
 
     public static function isActive($currentPath = null, $path = null)
     {
-        return $currentPath == $path;
+        $is_active = Str::startsWith("/".$currentPath,$path);
+        // if($path=='/menus' || $path == "/restaurants"){
+        // dump("/".$currentPath,$path,$is_active);
+        // }
+        return $is_active;
     }
 
     public static function getIconSvg($iconName)
