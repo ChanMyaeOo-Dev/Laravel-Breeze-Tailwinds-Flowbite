@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMenuRequest;
 use App\Http\Requests\UpdateMenuRequest;
+use App\Jobs\OptimizeImageJob;
 use App\Models\Menu;
+use App\Services\ImageService;
 
 class MenuController extends Controller
 {
@@ -20,21 +22,18 @@ class MenuController extends Controller
         return view('menus.create');
     }
 
-    public function store(StoreMenuRequest $request)
+    public function store(StoreMenuRequest $request, ImageService $imageService)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:menus',
-            'password' => 'required|string|min:8',
-            'address' => 'required|string',
-            'phone' => 'required|string|max:20',
-            'logo_url' => 'nullable|url|max:255',
-            'opening_time' => 'required|date_format:H:i',
-            'closing_time' => 'required|date_format:H:i',
-            'is_active' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
-        Menu::create($validated);
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $imageService->storeRaw($request->file('image'), 'menus');
+            OptimizeImageJob::dispatch($imagePath, $imageService->getDisk());
+        }
+
+        unset($validated['image']);
+        $menu = Menu::create($validated + ['image' => $imagePath]);
 
         return redirect()->route('menus.index')->with('success', 'Menu created successfully.');
     }
@@ -44,27 +43,32 @@ class MenuController extends Controller
         return view('menus.edit', compact('menu'));
     }
 
-    public function update(UpdateMenuRequest $request, Menu $menu)
+    public function update(UpdateMenuRequest $request, Menu $menu, ImageService $imageService)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'required|string',
-            'phone' => 'required|string|max:20',
-            'logo_url' => 'nullable|url|max:255',
-            'opening_time' => 'required|date_format:H:i',
-            'closing_time' => 'required|date_format:H:i',
-            'is_active' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
-        $validated['is_active'] = $request->has('is_active');
+        $imagePath = $menu->image;
+        if ($request->hasFile('image')) {
+            if ($menu->image) {
+                $imageService->delete($menu->image);
+            }
 
-        $menu->update($validated);
+            $imagePath = $imageService->storeRaw($request->file('image'), 'menus');
+            OptimizeImageJob::dispatch($imagePath, $imageService->getDisk());
+        }
+
+        unset($validated['image']);
+        $menu->update($validated + ['image' => $imagePath]);
 
         return redirect()->route('menus.index')->with('success', 'Menu updated successfully.');
     }
 
-    public function destroy(Menu $menu)
+    public function destroy(Menu $menu, ImageService $imageService)
     {
+        if ($menu->image) {
+            $imageService->delete($menu->image);
+        }
+
         $menu->delete();
 
         return redirect()->route('menus.index')->with('success', 'Menu deleted successfully.');
