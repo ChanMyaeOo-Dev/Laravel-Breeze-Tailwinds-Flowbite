@@ -26,11 +26,12 @@ class OptimizeImageJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
     public function __construct(
         public string $path,
         public string $disk,
-    ) {}
+    ) {
+    }
 
     public function uniqueId(): string
     {
-        return $this->disk.':'.$this->path;
+        return $this->disk . ':' . $this->path;
     }
 
     public function handle(ImageService $imageService): void
@@ -38,11 +39,6 @@ class OptimizeImageJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
         $imageService->setDisk($this->disk);
 
         $imageService->optimize($this->path);
-
-        Log::info('Image optimized', [
-            'path' => $this->path,
-            'disk' => $this->disk,
-        ]);
     }
 
     public function failed(\Throwable $exception): void

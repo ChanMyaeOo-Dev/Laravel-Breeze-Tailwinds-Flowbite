@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Encoders\WebpEncoder;
@@ -23,7 +24,7 @@ class ImageService
     {
         $this->manager = new ImageManager(Driver::class);
         $this->disk = config('image.disk', 's3');
-        $this->maxWidth = config('image.max_width', 1200);
+        $this->maxWidth = config('image.max_width', 900);
         $this->quality = config('image.quality', 80);
     }
 
@@ -90,10 +91,11 @@ class ImageService
             $contents = Storage::disk($this->disk)->get($path);
 
             if ($contents === null) {
+                Log::error("Could not read image at [{$path}] from disk [{$this->disk}].");
                 throw new \RuntimeException("Could not read image at [{$path}] from disk [{$this->disk}].");
             }
 
-            $tempPath = storage_path('app/temp_'.Str::random(40).'.tmp');
+            $tempPath = storage_path('app/temp_' . Str::random(40) . '.tmp');
             file_put_contents($tempPath, $contents);
 
             $image = $this->manager->decode($tempPath);
@@ -104,9 +106,16 @@ class ImageService
 
             $encoded = $image->encode(new WebpEncoder(quality: $this->quality));
             Storage::disk($this->disk)->put($path, $encoded);
+            Log::info("Image optimized for [{$path}] on disk [{$this->disk}].");
         } catch (\RuntimeException $e) {
+            Log::error("Image optimization failed for [{$path}] on disk [{$this->disk}]: {$e->getMessage()}", [
+                'exception' => $e,
+            ]);
             throw $e;
         } catch (\Throwable $e) {
+            Log::error("Image optimization failed for [{$path}] on disk [{$this->disk}]: {$e->getMessage()}", [
+                'exception' => $e,
+            ]);
             throw new \RuntimeException(
                 "Image optimization failed for [{$path}]: {$e->getMessage()}",
                 previous: $e
