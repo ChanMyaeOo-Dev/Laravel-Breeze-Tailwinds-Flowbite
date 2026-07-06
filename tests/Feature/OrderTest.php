@@ -5,6 +5,7 @@ use App\Models\MenuCategory;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Restaurant;
+use App\Models\RestaurantTable;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,6 +21,7 @@ beforeEach(function () {
         'menu_category_id' => $this->menuCategory->id,
         'price' => 25.00,
     ]);
+    $this->restaurantTable = RestaurantTable::factory()->create(['restaurant_id' => $this->restaurant->id]);
 });
 
 it('index page loads successfully', function () {
@@ -81,6 +83,7 @@ it('create page shows only own menus and categories', function () {
 
 it('stores a new order with items', function () {
     $data = [
+        'table_id' => $this->restaurantTable->id,
         'special_instructions' => 'No onions',
         'items' => [
             ['menu_id' => $this->menu->id, 'quantity' => 2, 'notes' => 'Extra spicy'],
@@ -92,6 +95,7 @@ it('stores a new order with items', function () {
     $response->assertRedirect(route('orders.index'));
     $this->assertDatabaseHas('orders', [
         'restaurant_id' => $this->restaurant->id,
+        'table_id' => $this->restaurantTable->id,
         'special_instructions' => 'No onions',
     ]);
 
@@ -107,7 +111,7 @@ it('stores a new order with items', function () {
 it('validates required fields on store', function () {
     $response = $this->post(route('orders.store'), []);
 
-    $response->assertSessionHasErrors(['items']);
+    $response->assertSessionHasErrors(['table_id', 'items']);
 });
 
 it('validates items array on store', function () {

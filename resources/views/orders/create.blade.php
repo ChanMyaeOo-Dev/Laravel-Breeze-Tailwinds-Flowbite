@@ -15,6 +15,20 @@
     <form action="{{ route('orders.store') }}" method="POST" x-data="orderCreator()" x-on:submit="loading = true">
         @csrf
 
+        <div class="mb-4">
+            <label for="table_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Table *</label>
+            <select name="table_id" id="table_id" required x-model="selectedTable"
+                class="block w-full text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-brand focus:border-brand dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <option value="">Select a table...</option>
+                @foreach ($restaurantTables as $table)
+                    <option value="{{ $table->id }}">{{ $table->table_number }} ({{ $table->section ?? 'No section' }}) - {{ $table->seating_capacity }} seats</option>
+                @endforeach
+            </select>
+            @error('table_id')
+                <span class="text-sm text-red-600">{{ $message }}</span>
+            @enderror
+        </div>
+
         <div class="flex flex-col lg:flex-row gap-6">
             {{-- Left Panel: Menu Catalog --}}
             <div class="flex-1 min-w-0">
@@ -253,6 +267,7 @@
                 return {
                     search: '',
                     activeCategory: null,
+                    selectedTable: '',
                     cart: [],
                     loading: false,
                     menus: @js($menus->map(fn($m) => [

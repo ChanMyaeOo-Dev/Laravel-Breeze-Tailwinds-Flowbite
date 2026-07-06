@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Menu;
 use App\Models\MenuCategory;
 use App\Models\Order;
+use App\Models\RestaurantTable;
 use App\Traits\RestaurantScoped;
 
 class OrderController extends Controller
@@ -16,7 +17,7 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::forRestaurant()
-            ->with('orderItems.menu')
+            ->with('orderItems.menu', 'table')
             ->latest()
             ->get();
 
@@ -35,13 +36,19 @@ class OrderController extends Controller
             ->orderBy('display_order')
             ->get();
 
-        return view('orders.create', compact('menus', 'menuCategories'));
+        $restaurantTables = RestaurantTable::forRestaurant()
+            ->where('status', 'available')
+            ->orderBy('table_number')
+            ->get();
+
+        return view('orders.create', compact('menus', 'menuCategories', 'restaurantTables'));
     }
 
     public function store(StoreOrderRequest $request)
     {
         $order = Order::create([
             'restaurant_id' => auth()->id(),
+            'table_id' => $request->table_id,
             'special_instructions' => $request->special_instructions,
         ]);
 
@@ -68,7 +75,7 @@ class OrderController extends Controller
             abort(403);
         }
 
-        $order->load('orderItems.menu');
+        $order->load('orderItems.menu', 'table');
 
         return view('orders.show', compact('order'));
     }

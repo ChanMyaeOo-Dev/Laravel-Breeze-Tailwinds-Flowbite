@@ -24,6 +24,7 @@
             <thead class="text-sm text-body bg-neutral-secondary-medium border-b border-t border-default-medium">
                 <tr>
                     <th scope="col" class="px-6 py-3 font-medium">Order #</th>
+                    <th scope="col" class="px-6 py-3 font-medium">Table</th>
                     <th scope="col" class="px-6 py-3 font-medium">Items</th>
                     <th scope="col" class="px-6 py-3 font-medium">Total</th>
                     <th scope="col" class="px-6 py-3 font-medium">Status</th>
@@ -36,6 +37,9 @@
                     <tr class="bg-neutral-brand-soft border-b border-default hover:bg-neutral-secondary-medium">
                         <td class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                             {{ $order->order_number }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ $order->table->table_number ?? '-' }}
                         </td>
                         <td class="px-6 py-4">
                             {{ $order->orderItems->count() }} item(s)

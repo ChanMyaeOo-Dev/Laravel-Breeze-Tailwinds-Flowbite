@@ -48,6 +48,10 @@
                     </dd>
                 </div>
                 <div class="flex justify-between">
+                    <dt class="text-sm text-gray-500 dark:text-gray-400">Table</dt>
+                    <dd class="text-sm text-gray-900 dark:text-white">{{ $order->table->table_number ?? '-' }}</dd>
+                </div>
+                <div class="flex justify-between">
                     <dt class="text-sm text-gray-500 dark:text-gray-400">Date</dt>
                     <dd class="text-sm text-gray-900 dark:text-white">{{ $order->created_at->format('M d, Y H:i') }}</dd>
                 </div>

@@ -6,6 +6,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\RestaurantTableController;
 use App\Http\Controllers\SwitchAccountController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', UserController::class);
     });
 
+    Route::resource('restaurant-tables', RestaurantTableController::class);
     Route::resource('menus', MenuController::class);
     Route::resource('menu-categories', MenuCategoryController::class);
 

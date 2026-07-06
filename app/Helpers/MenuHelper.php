@@ -34,6 +34,11 @@ class MenuHelper
 
         $items = array_merge($items, [
             [
+                'icon' => 'tables',
+                'name' => 'Tables',
+                'path' => '/restaurant-tables',
+            ],
+            [
                 'icon' => 'menu',
                 'name' => 'Menus',
                 'path' => '/menus',
@@ -49,36 +54,9 @@ class MenuHelper
                 'path' => '/orders',
             ],
             [
-                'icon' => 'calendar',
-                'name' => 'Calendar',
-                'path' => '/calendar',
-            ],
-            [
                 'icon' => 'user-profile',
                 'name' => 'User Profile',
                 'path' => '/profile',
-            ],
-            [
-                'name' => 'Forms',
-                'icon' => 'forms',
-                'subItems' => [
-                    ['name' => 'Form Elements', 'path' => 'dashboard', 'pro' => false],
-                ],
-            ],
-            [
-                'name' => 'Tables',
-                'icon' => 'tables',
-                'subItems' => [
-                    ['name' => 'Basic Tables', 'path' => 'dashboard', 'pro' => false],
-                ],
-            ],
-            [
-                'name' => 'Pages',
-                'icon' => 'pages',
-                'subItems' => [
-                    ['name' => 'Blank Page', 'path' => 'dashboard', 'pro' => false],
-                    ['name' => '404 Error', 'path' => 'dashboard', 'pro' => false],
-                ],
             ],
         ]);
 
