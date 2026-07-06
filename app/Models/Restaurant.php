@@ -36,6 +36,7 @@ class Restaurant extends Authenticatable
         return [
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'is_admin' => 'boolean',
         ];
     }
 

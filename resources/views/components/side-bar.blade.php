@@ -94,7 +94,7 @@
                             {{ auth()->user()->name }}
                         </span>
                         <span class="block text-xs text-neutral-900 truncate dark:text-white">
-                            {{ auth()->user()->email }}
+                            {{ auth()->user()->username }}
                         </span>
                     </div>
                     <svg class="w-7 h-7 text-dark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
@@ -111,27 +111,37 @@
                     <span class="block text-sm font-semibold text-neutral-900 dark:text-white">
                         {{ auth()->user()->name }}
                     </span>
-                    <span class="block text-sm text-neutral-900 truncate dark:text-white">
-                        {{ auth()->user()->email }}
+                    <span class="block text-xs text-neutral-900 truncate dark:text-white">
+                        {{ auth()->user()->username }}
                     </span>
                 </div>
                 <ul class="py-1 text-neutral-700 dark:text-neutral-300" aria-labelledby="dropdown">
-                    <li>
-                        <a href="#"
-                            class="block py-2 px-4 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:hover:text-white">My
-                            profile</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="block py-2 px-4 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:hover:text-white">Account
-                            settings</a>
-                    </li>
+                    @if (auth()->user()->is_admin)
+                        <li>
+                            <a href="{{ route('switch-account') }}"
+                                class="flex items-center gap-2 py-2 px-4 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:hover:text-white">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                                </svg>
+                                Switch Account
+                            </a>
+                        </li>
+                    @endif
                 </ul>
                 <ul class="py-1 text-neutral-700 dark:text-neutral-300" aria-labelledby="dropdown">
                     <li>
-                        <a href="#"
-                            class="block py-2 px-4 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:hover:text-white">Sign
-                            out</a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="flex items-center gap-2 w-full py-2 px-4 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:hover:text-white text-left">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                </svg>
+                                Sign out
+                            </button>
+                        </form>
                     </li>
                 </ul>
             </div>

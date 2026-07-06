@@ -6,6 +6,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\SwitchAccountController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -22,5 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('orders', OrderController::class);
     Route::resource('orders.order-items', OrderItemController::class)->except(['index', 'show', 'create', 'edit']);
 
-    // Menus
+    // Switch Account
+    Route::get('switch-account', [SwitchAccountController::class, 'index'])->name('switch-account')->middleware('is_admin');
+    Route::get('switch-account/{restaurant}/login', [SwitchAccountController::class, 'showLogin'])->name('switch-account.show-login')->middleware('is_admin');
+    Route::post('switch-account/{restaurant}', [SwitchAccountController::class, 'switch'])->name('switch-account.switch')->middleware('is_admin');
 });
