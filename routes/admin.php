@@ -7,6 +7,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SwitchAccountController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -17,6 +18,7 @@ Route::middleware('auth')->group(function () {
     // Restaurants (admin only)
     Route::middleware('is_admin')->group(function () {
         Route::resource('restaurants', RestaurantController::class);
+        Route::resource('users', UserController::class);
     });
 
     Route::resource('menus', MenuController::class);

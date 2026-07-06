@@ -31,7 +31,7 @@ class OrderController extends Controller
             ->get();
 
         $menuCategories = MenuCategory::forRestaurant()
-            ->with(['menus' => fn($q) => $q->where('status', true)])
+            ->with(['menus' => fn ($q) => $q->where('status', true)])
             ->orderBy('display_order')
             ->get();
 
@@ -64,6 +64,10 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
+        if (! self::isAdmin() && ! $order->belongsToCurrentRestaurant()) {
+            abort(403);
+        }
+
         $order->load('orderItems.menu');
 
         return view('orders.show', compact('order'));
@@ -71,6 +75,10 @@ class OrderController extends Controller
 
     public function edit(Order $order)
     {
+        if (! self::isAdmin() && ! $order->belongsToCurrentRestaurant()) {
+            abort(403);
+        }
+
         $menus = Menu::forRestaurant()
             ->where('status', true)
             ->orderBy('name')
@@ -83,6 +91,10 @@ class OrderController extends Controller
 
     public function update(UpdateOrderRequest $request, Order $order)
     {
+        if (! self::isAdmin() && ! $order->belongsToCurrentRestaurant()) {
+            abort(403);
+        }
+
         $order->update($request->validated());
 
         return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
@@ -90,7 +102,12 @@ class OrderController extends Controller
 
     public function destroy(Order $order)
     {
+        if (! self::isAdmin() && ! $order->belongsToCurrentRestaurant()) {
+            abort(403);
+        }
+
         $order->delete();
+
         return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
     }
 }

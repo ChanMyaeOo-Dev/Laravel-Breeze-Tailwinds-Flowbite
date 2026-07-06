@@ -15,6 +15,10 @@ class OrderItemController extends Controller
 
     public function store(StoreOrderItemRequest $request, Order $order)
     {
+        if (! self::isAdmin() && ! $order->belongsToCurrentRestaurant()) {
+            abort(403);
+        }
+
         $menu = Menu::where('id', $request->menu_id)
             ->where('restaurant_id', $order->restaurant_id)
             ->firstOrFail();
@@ -33,6 +37,10 @@ class OrderItemController extends Controller
 
     public function update(UpdateOrderItemRequest $request, Order $order, OrderItem $orderItem)
     {
+        if (! self::isAdmin() && ! $order->belongsToCurrentRestaurant()) {
+            abort(403);
+        }
+
         $orderItem->update($request->validated());
 
         $order->recalculateTotals();
@@ -42,8 +50,13 @@ class OrderItemController extends Controller
 
     public function destroy(Order $order, OrderItem $orderItem)
     {
+        if (! self::isAdmin() && ! $order->belongsToCurrentRestaurant()) {
+            abort(403);
+        }
+
         $orderItem->delete();
         $order->recalculateTotals();
+
         return redirect()->route('orders.show', $order)->with('success', 'Order item removed.');
     }
 }

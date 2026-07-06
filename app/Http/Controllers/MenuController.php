@@ -54,6 +54,10 @@ class MenuController extends Controller
 
     public function edit(Menu $menu)
     {
+        if (! self::isAdmin() && ! $menu->belongsToCurrentRestaurant()) {
+            abort(403);
+        }
+
         $menuCategories = MenuCategory::forRestaurant()
             ->orderBy('display_order')
             ->get();
@@ -63,6 +67,10 @@ class MenuController extends Controller
 
     public function update(UpdateMenuRequest $request, Menu $menu, ImageService $imageService)
     {
+        if (! self::isAdmin() && ! $menu->belongsToCurrentRestaurant()) {
+            abort(403);
+        }
+
         $validated = $request->validated();
 
         $imagePath = $menu->image;
@@ -83,6 +91,10 @@ class MenuController extends Controller
 
     public function destroy(Menu $menu, ImageService $imageService)
     {
+        if (! self::isAdmin() && ! $menu->belongsToCurrentRestaurant()) {
+            abort(403);
+        }
+
         if ($menu->image) {
             $imageService->delete($menu->image);
         }

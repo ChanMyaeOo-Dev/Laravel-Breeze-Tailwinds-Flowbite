@@ -36,11 +36,19 @@ class MenuCategoryController extends Controller
 
     public function edit(MenuCategory $menuCategory)
     {
+        if (! self::isAdmin() && ! $menuCategory->belongsToCurrentRestaurant()) {
+            abort(403);
+        }
+
         return view('menu-categories.edit', compact('menuCategory'));
     }
 
     public function update(UpdateMenuCategoryRequest $request, MenuCategory $menuCategory)
     {
+        if (! self::isAdmin() && ! $menuCategory->belongsToCurrentRestaurant()) {
+            abort(403);
+        }
+
         $menuCategory->update($request->validated());
 
         return redirect()->route('menu-categories.index')->with('success', 'Menu category updated successfully.');
@@ -48,7 +56,12 @@ class MenuCategoryController extends Controller
 
     public function destroy(MenuCategory $menuCategory)
     {
+        if (! self::isAdmin() && ! $menuCategory->belongsToCurrentRestaurant()) {
+            abort(403);
+        }
+
         $menuCategory->delete();
+
         return redirect()->route('menu-categories.index')->with('success', 'Menu category deleted successfully.');
     }
 }

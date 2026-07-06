@@ -24,6 +24,12 @@ class MenuHelper
                 'name' => 'Restaurants',
                 'path' => '/restaurants',
             ];
+
+            $items[] = [
+                'icon' => 'user-profile',
+                'name' => 'Users',
+                'path' => '/users',
+            ];
         }
 
         $items = array_merge($items, [
