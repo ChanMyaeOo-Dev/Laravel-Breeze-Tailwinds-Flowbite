@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Database\Factories\MenuFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Menu extends Model
 {
-    /** @use HasFactory<\Database\Factories\MenuFactory> */
+    /** @use HasFactory<MenuFactory> */
     use HasFactory;
 
     protected $guarded = [];
@@ -15,5 +16,10 @@ class Menu extends Model
     public function restaurant()
     {
         return $this->belongsTo(Restaurant::class);
+    }
+
+    public function menuCategory()
+    {
+        return $this->belongsTo(MenuCategory::class);
     }
 }

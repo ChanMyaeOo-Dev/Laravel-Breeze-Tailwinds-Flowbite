@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Helpers;
+
 use Illuminate\Support\Str;
 
 class MenuHelper
@@ -26,6 +27,11 @@ class MenuHelper
                 'path' => '/menus',
             ],
             [
+                'icon' => 'forms',
+                'name' => 'Menu Categories',
+                'path' => '/menu-categories',
+            ],
+            [
                 'icon' => 'calendar',
                 'name' => 'Calendar',
                 'path' => '/calendar',
@@ -46,7 +52,7 @@ class MenuHelper
                 'name' => 'Tables',
                 'icon' => 'tables',
                 'subItems' => [
-                    ['name' => 'Basic Tables', 'path' => 'dashboard', 'pro' => false]
+                    ['name' => 'Basic Tables', 'path' => 'dashboard', 'pro' => false],
                 ],
             ],
             [
@@ -54,9 +60,9 @@ class MenuHelper
                 'icon' => 'pages',
                 'subItems' => [
                     ['name' => 'Blank Page', 'path' => 'dashboard', 'pro' => false],
-                    ['name' => '404 Error', 'path' => 'dashboard', 'pro' => false]
+                    ['name' => '404 Error', 'path' => 'dashboard', 'pro' => false],
                 ],
-            ]
+            ],
         ];
     }
 
@@ -68,7 +74,7 @@ class MenuHelper
                 'name' => 'Charts',
                 'subItems' => [
                     ['name' => 'Line Chart', 'path' => '/line-chart', 'pro' => false],
-                    ['name' => 'Bar Chart', 'path' => '/bar-chart', 'pro' => false]
+                    ['name' => 'Bar Chart', 'path' => '/bar-chart', 'pro' => false],
                 ],
             ],
             [
@@ -99,18 +105,19 @@ class MenuHelper
         return [
             [
                 'title' => 'Menu',
-                'items' => self::getMainNavItems()
+                'items' => self::getMainNavItems(),
             ],
             [
                 'title' => 'Others',
-                'items' => self::getOthersItems()
-            ]
+                'items' => self::getOthersItems(),
+            ],
         ];
     }
 
     public static function isActive($currentPath = null, $path = null)
     {
-        $is_active = Str::startsWith("/".$currentPath,$path);
+        $is_active = Str::startsWith('/'.$currentPath, $path);
+
         // if($path=='/menus' || $path == "/restaurants"){
         // dump("/".$currentPath,$path,$is_active);
         // }

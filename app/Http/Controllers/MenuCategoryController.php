@@ -8,59 +8,41 @@ use App\Models\MenuCategory;
 
 class MenuCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $menuCategories = MenuCategory::latest()->get();
+
+        return view('menu-categories.index', compact('menuCategories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('menu-categories.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreMenuCategoryRequest $request)
     {
-        //
+        MenuCategory::create($request->validated());
+
+        return redirect()->route('menu-categories.index')->with('success', 'Menu category created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(MenuCategory $menuCategory)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(MenuCategory $menuCategory)
     {
-        //
+        return view('menu-categories.edit', compact('menuCategory'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateMenuCategoryRequest $request, MenuCategory $menuCategory)
     {
-        //
+        $menuCategory->update($request->validated());
+
+        return redirect()->route('menu-categories.index')->with('success', 'Menu category updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(MenuCategory $menuCategory)
     {
-        //
+        $menuCategory->delete();
+
+        return redirect()->route('menu-categories.index')->with('success', 'Menu category deleted successfully.');
     }
 }

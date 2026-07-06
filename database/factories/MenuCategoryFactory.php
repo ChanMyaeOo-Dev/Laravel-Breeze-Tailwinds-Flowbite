@@ -18,7 +18,9 @@ class MenuCategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->unique()->word(),
+            'description' => fake()->optional()->sentence(),
+            'display_order' => fake()->numberBetween(0, 100),
         ];
     }
 }

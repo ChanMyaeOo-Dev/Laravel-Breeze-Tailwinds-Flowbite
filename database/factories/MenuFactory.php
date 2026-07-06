@@ -3,9 +3,10 @@
 namespace Database\Factories;
 
 use App\Models\Menu;
+use App\Models\MenuCategory;
 use App\Models\Restaurant;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Menu>
@@ -21,9 +22,9 @@ class MenuFactory extends Factory
     {
         return [
             'restaurant_id' => Restaurant::factory(),
+            'menu_category_id' => MenuCategory::factory(),
             'name' => fake()->name,
             'slug' => Str::slug(fake()->name),
-            'type' => ['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Dessert', 'Drink'][rand(0, 5)],
             'price' => fake()->numberBetween(1000, 10000),
             'description' => fake()->paragraph(3),
             'image' => null,
