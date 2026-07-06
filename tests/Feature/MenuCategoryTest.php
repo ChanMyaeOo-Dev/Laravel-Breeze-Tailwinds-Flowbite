@@ -37,6 +37,7 @@ it('create page loads successfully', function () {
 
 it('stores a new menu category', function () {
     $data = [
+        'restaurant_id' => $this->restaurant->id,
         'name' => 'Main Course',
         'description' => 'Delicious main courses',
         'display_order' => 1,
@@ -46,6 +47,7 @@ it('stores a new menu category', function () {
 
     $response->assertRedirect(route('menu-categories.index'));
     $this->assertDatabaseHas('menu_categories', [
+        'restaurant_id' => $this->restaurant->id,
         'name' => 'Main Course',
         'description' => 'Delicious main courses',
         'display_order' => 1,
@@ -55,7 +57,7 @@ it('stores a new menu category', function () {
 it('validates required fields on store', function () {
     $response = $this->post(route('menu-categories.store'), []);
 
-    $response->assertSessionHasErrors(['name', 'display_order']);
+    $response->assertSessionHasErrors(['restaurant_id', 'name', 'display_order']);
 });
 
 it('edit page loads successfully', function () {
@@ -72,6 +74,7 @@ it('updates a menu category', function () {
     $category = MenuCategory::factory()->create();
 
     $response = $this->put(route('menu-categories.update', $category), [
+        'restaurant_id' => $this->restaurant->id,
         'name' => 'Updated Category',
         'description' => 'Updated description',
         'display_order' => 5,
@@ -80,6 +83,7 @@ it('updates a menu category', function () {
     $response->assertRedirect(route('menu-categories.index'));
     $this->assertDatabaseHas('menu_categories', [
         'id' => $category->id,
+        'restaurant_id' => $this->restaurant->id,
         'name' => 'Updated Category',
         'description' => 'Updated description',
         'display_order' => 5,
@@ -91,7 +95,7 @@ it('validates required fields on update', function () {
 
     $response = $this->put(route('menu-categories.update', $category), []);
 
-    $response->assertSessionHasErrors(['name', 'display_order']);
+    $response->assertSessionHasErrors(['restaurant_id', 'name', 'display_order']);
 });
 
 it('deletes a menu category', function () {

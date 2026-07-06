@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\RestaurantFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,7 +23,7 @@ use Illuminate\Notifications\Notifiable;
 #[Hidden(['password'])]
 class Restaurant extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\RestaurantFactory> */
+    /** @use HasFactory<RestaurantFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -38,7 +39,18 @@ class Restaurant extends Authenticatable
         ];
     }
 
-    public function menus() {
+    public function menus()
+    {
         return $this->hasMany(Menu::class);
+    }
+
+    public function menuCategories()
+    {
+        return $this->hasMany(MenuCategory::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

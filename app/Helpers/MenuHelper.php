@@ -32,6 +32,11 @@ class MenuHelper
                 'path' => '/menu-categories',
             ],
             [
+                'icon' => 'ecommerce',
+                'name' => 'Orders',
+                'path' => '/orders',
+            ],
+            [
                 'icon' => 'calendar',
                 'name' => 'Calendar',
                 'path' => '/calendar',

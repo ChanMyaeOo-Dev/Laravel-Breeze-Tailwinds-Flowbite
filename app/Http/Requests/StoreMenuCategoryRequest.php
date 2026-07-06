@@ -14,6 +14,7 @@ class StoreMenuCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'restaurant_id' => ['required', 'exists:restaurants,id'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'display_order' => ['required', 'integer', 'min:0'],
