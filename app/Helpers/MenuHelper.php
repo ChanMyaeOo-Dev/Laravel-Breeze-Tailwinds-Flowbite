@@ -8,7 +8,7 @@ class MenuHelper
 {
     public static function getMainNavItems()
     {
-        return [
+        $items = [
             [
                 'icon' => 'dashboard',
                 'name' => 'Dashboard',
@@ -16,11 +16,17 @@ class MenuHelper
                     ['name' => 'Dashboard', 'path' => 'dashboard'],
                 ],
             ],
-            [
+        ];
+
+        if (auth()->check() && (auth()->user()->user?->is_admin ?? false)) {
+            $items[] = [
                 'icon' => 'ecommerce',
                 'name' => 'Restaurants',
                 'path' => '/restaurants',
-            ],
+            ];
+        }
+
+        $items = array_merge($items, [
             [
                 'icon' => 'menu',
                 'name' => 'Menus',
@@ -68,7 +74,9 @@ class MenuHelper
                     ['name' => '404 Error', 'path' => 'dashboard', 'pro' => false],
                 ],
             ],
-        ];
+        ]);
+
+        return $items;
     }
 
     public static function getOthersItems()

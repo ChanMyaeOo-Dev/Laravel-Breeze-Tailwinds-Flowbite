@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('restaurants', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
             $table->string('username')->unique();
             $table->string('password');
+            $table->string('remember_token', 100)->nullable();
             $table->text('address');
             $table->string('phone', 20);
             $table->string('logo_url')->nullable();

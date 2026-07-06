@@ -7,12 +7,15 @@ use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Menu;
 use App\Models\MenuCategory;
 use App\Models\Order;
+use App\Traits\RestaurantScoped;
 
 class OrderController extends Controller
 {
+    use RestaurantScoped;
+
     public function index()
     {
-        $orders = Order::where('restaurant_id', auth()->id())
+        $orders = Order::forRestaurant()
             ->with('orderItems.menu')
             ->latest()
             ->get();
@@ -22,13 +25,13 @@ class OrderController extends Controller
 
     public function create()
     {
-        $menus = Menu::where('restaurant_id', auth()->id())
+        $menus = Menu::forRestaurant()
             ->where('status', true)
             ->orderBy('name')
             ->get();
 
-        $menuCategories = MenuCategory::where('restaurant_id', auth()->id())
-            ->with(['menus' => fn ($q) => $q->where('status', true)])
+        $menuCategories = MenuCategory::forRestaurant()
+            ->with(['menus' => fn($q) => $q->where('status', true)])
             ->orderBy('display_order')
             ->get();
 
@@ -43,7 +46,8 @@ class OrderController extends Controller
         ]);
 
         foreach ($request->items as $item) {
-            $menu = Menu::findOrFail($item['menu_id']);
+            $menu = Menu::forRestaurant()
+                ->findOrFail($item['menu_id']);
 
             $order->orderItems()->create([
                 'menu_id' => $menu->id,
@@ -67,7 +71,7 @@ class OrderController extends Controller
 
     public function edit(Order $order)
     {
-        $menus = Menu::where('restaurant_id', auth()->id())
+        $menus = Menu::forRestaurant()
             ->where('status', true)
             ->orderBy('name')
             ->get();
@@ -87,7 +91,6 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
         $order->delete();
-
         return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
     }
 }

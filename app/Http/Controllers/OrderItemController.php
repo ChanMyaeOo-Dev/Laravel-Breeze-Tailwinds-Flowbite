@@ -7,12 +7,17 @@ use App\Http\Requests\UpdateOrderItemRequest;
 use App\Models\Menu;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Traits\RestaurantScoped;
 
 class OrderItemController extends Controller
 {
+    use RestaurantScoped;
+
     public function store(StoreOrderItemRequest $request, Order $order)
     {
-        $menu = Menu::findOrFail($request->menu_id);
+        $menu = Menu::where('id', $request->menu_id)
+            ->where('restaurant_id', $order->restaurant_id)
+            ->firstOrFail();
 
         $order->orderItems()->create([
             'menu_id' => $menu->id,
@@ -38,9 +43,7 @@ class OrderItemController extends Controller
     public function destroy(Order $order, OrderItem $orderItem)
     {
         $orderItem->delete();
-
         $order->recalculateTotals();
-
         return redirect()->route('orders.show', $order)->with('success', 'Order item removed.');
     }
 }

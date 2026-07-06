@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
             $table->foreignId('restaurant_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('menu_category_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
             $table->string('slug');
             $table->string('image')->nullable();
             $table->string('price');
             $table->text('description')->nullable();
-            $table->string('type');
             $table->boolean('status')->default(true);
             $table->timestamps();
         });

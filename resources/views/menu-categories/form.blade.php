@@ -4,23 +4,6 @@
 
 <div class="grid gap-4 mb-4 sm:grid-cols-2">
     <div>
-        <label for="restaurant_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Restaurant</label>
-        <select name="restaurant_id" id="restaurant_id"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-            required>
-            <option value="">Select Restaurant</option>
-            @foreach (\App\Models\Restaurant::orderBy('name')->get() as $restaurant)
-                <option value="{{ $restaurant->id }}"
-                    {{ old('restaurant_id', $menuCategory->restaurant_id ?? '') == $restaurant->id ? 'selected' : '' }}>
-                    {{ $restaurant->name }}
-                </option>
-            @endforeach
-        </select>
-        @error('restaurant_id')
-            <span class="text-sm text-red-600">{{ $message }}</span>
-        @enderror
-    </div>
-    <div>
         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
         <input type="text" name="name" id="name"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"

@@ -50,6 +50,7 @@ class RestaurantController extends Controller
 
     public function update(Request $request, Restaurant $restaurant)
     {
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'username' => ['required', 'string', 'max:255', Rule::unique('restaurants')->ignore($restaurant->id)],

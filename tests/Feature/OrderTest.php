@@ -5,6 +5,8 @@ use App\Models\MenuCategory;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Restaurant;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 use function Pest\Laravel\actingAs;
 
@@ -29,16 +31,33 @@ it('index page loads successfully', function () {
     $response->assertSee('Orders');
 });
 
-it('index page lists orders', function () {
-    $order = Order::factory()->create([
-        'restaurant_id' => $this->restaurant->id,
-        'order_number' => 'ORD-TEST001',
-    ]);
+it('index page lists only own orders', function () {
+    $ownOrder = Order::factory()->create(['restaurant_id' => $this->restaurant->id, 'order_number' => 'ORD-OWN001']);
+    $otherRestaurant = Restaurant::factory()->create();
+    Order::factory()->create(['restaurant_id' => $otherRestaurant->id, 'order_number' => 'ORD-OTHER1']);
 
     $response = $this->get(route('orders.index'));
 
     $response->assertOk();
-    $response->assertSee('ORD-TEST001');
+    $response->assertSee('ORD-OWN001');
+    $response->assertDontSee('ORD-OTHER1');
+});
+
+it('admin can see all orders', function () {
+    $adminUser = User::factory()->create(['is_admin' => true]);
+    $adminRestaurant = Restaurant::factory()->create(['user_id' => $adminUser->id]);
+    $this->app['auth']->forgetGuards();
+    Auth::login($adminRestaurant);
+
+    $ownOrder = Order::factory()->create(['restaurant_id' => $adminRestaurant->id, 'order_number' => 'ORD-OWN001']);
+    $otherRestaurant = Restaurant::factory()->create();
+    Order::factory()->create(['restaurant_id' => $otherRestaurant->id, 'order_number' => 'ORD-OTHER1']);
+
+    $response = $this->get(route('orders.index'));
+
+    $response->assertOk();
+    $response->assertSee('ORD-OWN001');
+    $response->assertSee('ORD-OTHER1');
 });
 
 it('create page loads successfully', function () {
@@ -46,6 +65,18 @@ it('create page loads successfully', function () {
 
     $response->assertOk();
     $response->assertSee('Create Order');
+});
+
+it('create page shows only own menus and categories', function () {
+    $otherRestaurant = Restaurant::factory()->create();
+    $otherMenu = Menu::factory()->create(['restaurant_id' => $otherRestaurant->id, 'name' => 'Other Restaurant Menu']);
+    $otherCategory = MenuCategory::factory()->create(['restaurant_id' => $otherRestaurant->id, 'name' => 'Other Category']);
+
+    $response = $this->get(route('orders.create'));
+
+    $response->assertOk();
+    $response->assertDontSee('Other Restaurant Menu');
+    $response->assertDontSee('Other Category');
 });
 
 it('stores a new order with items', function () {
@@ -97,6 +128,29 @@ it('show page loads successfully', function () {
     $response->assertSee($order->order_number);
 });
 
+it('prevents viewing other restaurant order', function () {
+    $otherRestaurant = Restaurant::factory()->create();
+    $order = Order::factory()->create(['restaurant_id' => $otherRestaurant->id]);
+
+    $response = $this->get(route('orders.show', $order));
+
+    $response->assertForbidden();
+});
+
+it('admin can view any order', function () {
+    $adminUser = User::factory()->create(['is_admin' => true]);
+    $adminRestaurant = Restaurant::factory()->create(['user_id' => $adminUser->id]);
+    $this->app['auth']->forgetGuards();
+    Auth::login($adminRestaurant);
+
+    $otherRestaurant = Restaurant::factory()->create();
+    $order = Order::factory()->create(['restaurant_id' => $otherRestaurant->id]);
+
+    $response = $this->get(route('orders.show', $order));
+
+    $response->assertOk();
+});
+
 it('edit page loads successfully', function () {
     $order = Order::factory()->create(['restaurant_id' => $this->restaurant->id]);
 
@@ -104,6 +158,15 @@ it('edit page loads successfully', function () {
 
     $response->assertOk();
     $response->assertSee('Edit Order');
+});
+
+it('prevents editing other restaurant order', function () {
+    $otherRestaurant = Restaurant::factory()->create();
+    $order = Order::factory()->create(['restaurant_id' => $otherRestaurant->id]);
+
+    $response = $this->get(route('orders.edit', $order));
+
+    $response->assertForbidden();
 });
 
 it('updates an order', function () {
@@ -120,6 +183,17 @@ it('updates an order', function () {
         'status' => 'preparing',
         'special_instructions' => 'Updated instructions',
     ]);
+});
+
+it('prevents updating other restaurant order', function () {
+    $otherRestaurant = Restaurant::factory()->create();
+    $order = Order::factory()->create(['restaurant_id' => $otherRestaurant->id]);
+
+    $response = $this->put(route('orders.update', $order), [
+        'status' => 'preparing',
+    ]);
+
+    $response->assertForbidden();
 });
 
 it('validates status on update', function () {
@@ -141,6 +215,16 @@ it('deletes an order', function () {
     $this->assertDatabaseMissing('orders', ['id' => $order->id]);
 });
 
+it('prevents deleting other restaurant order', function () {
+    $otherRestaurant = Restaurant::factory()->create();
+    $order = Order::factory()->create(['restaurant_id' => $otherRestaurant->id]);
+
+    $response = $this->delete(route('orders.destroy', $order));
+
+    $response->assertForbidden();
+    $this->assertDatabaseHas('orders', ['id' => $order->id]);
+});
+
 it('adds item to order', function () {
     $order = Order::factory()->create(['restaurant_id' => $this->restaurant->id]);
 
@@ -157,6 +241,31 @@ it('adds item to order', function () {
         'quantity' => 3,
         'unit_price' => 25.00,
     ]);
+});
+
+it('prevents adding item to other restaurant order', function () {
+    $otherRestaurant = Restaurant::factory()->create();
+    $order = Order::factory()->create(['restaurant_id' => $otherRestaurant->id]);
+
+    $response = $this->post(route('orders.order-items.store', $order), [
+        'menu_id' => $this->menu->id,
+        'quantity' => 1,
+    ]);
+
+    $response->assertForbidden();
+});
+
+it('prevents adding other restaurant menu item to own order', function () {
+    $order = Order::factory()->create(['restaurant_id' => $this->restaurant->id]);
+    $otherRestaurant = Restaurant::factory()->create();
+    $otherMenu = Menu::factory()->create(['restaurant_id' => $otherRestaurant->id, 'price' => 10.00]);
+
+    $response = $this->post(route('orders.order-items.store', $order), [
+        'menu_id' => $otherMenu->id,
+        'quantity' => 1,
+    ]);
+
+    $response->assertNotFound();
 });
 
 it('validates required fields on store order item', function () {

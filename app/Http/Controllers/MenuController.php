@@ -6,20 +6,31 @@ use App\Http\Requests\StoreMenuRequest;
 use App\Http\Requests\UpdateMenuRequest;
 use App\Jobs\OptimizeImageJob;
 use App\Models\Menu;
+use App\Models\MenuCategory;
 use App\Services\ImageService;
+use App\Traits\RestaurantScoped;
 
 class MenuController extends Controller
 {
+    use RestaurantScoped;
+
     public function index()
     {
-        $menus = Menu::latest()->with('restaurant')->get();
+        $menus = Menu::forRestaurant()
+            ->with('restaurant')
+            ->latest()
+            ->get();
 
         return view('menus.index', compact('menus'));
     }
 
     public function create()
     {
-        return view('menus.create');
+        $menuCategories = MenuCategory::forRestaurant()
+            ->orderBy('display_order')
+            ->get();
+
+        return view('menus.create', compact('menuCategories'));
     }
 
     public function store(StoreMenuRequest $request, ImageService $imageService)
@@ -33,14 +44,21 @@ class MenuController extends Controller
         }
 
         unset($validated['image']);
-        $menu = Menu::create($validated + ['image' => $imagePath]);
+        $menu = Menu::create($validated + [
+            'restaurant_id' => auth()->id(),
+            'image' => $imagePath,
+        ]);
 
         return redirect()->route('menus.index')->with('success', 'Menu created successfully.');
     }
 
     public function edit(Menu $menu)
     {
-        return view('menus.edit', compact('menu'));
+        $menuCategories = MenuCategory::forRestaurant()
+            ->orderBy('display_order')
+            ->get();
+
+        return view('menus.edit', compact('menu', 'menuCategories'));
     }
 
     public function update(UpdateMenuRequest $request, Menu $menu, ImageService $imageService)

@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Models\Restaurant;
 
 test('login screen can be rendered', function () {
     $response = $this->get('/login');
@@ -9,10 +9,10 @@ test('login screen can be rendered', function () {
 });
 
 test('users can authenticate using the login screen', function () {
-    $user = User::factory()->create();
+    $user = Restaurant::factory()->create();
 
     $response = $this->post('/login', [
-        'email' => $user->email,
+        'username' => $user->username,
         'password' => 'password',
     ]);
 
@@ -21,10 +21,10 @@ test('users can authenticate using the login screen', function () {
 });
 
 test('users can not authenticate with invalid password', function () {
-    $user = User::factory()->create();
+    $user = Restaurant::factory()->create();
 
     $this->post('/login', [
-        'email' => $user->email,
+        'username' => $user->username,
         'password' => 'wrong-password',
     ]);
 
@@ -32,7 +32,7 @@ test('users can not authenticate with invalid password', function () {
 });
 
 test('users can logout', function () {
-    $user = User::factory()->create();
+    $user = Restaurant::factory()->create();
 
     $response = $this->actingAs($user)->post('/logout');
 

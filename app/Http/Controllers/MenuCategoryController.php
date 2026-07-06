@@ -5,12 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreMenuCategoryRequest;
 use App\Http\Requests\UpdateMenuCategoryRequest;
 use App\Models\MenuCategory;
+use App\Traits\RestaurantScoped;
 
 class MenuCategoryController extends Controller
 {
+    use RestaurantScoped;
+
     public function index()
     {
-        $menuCategories = MenuCategory::latest()->get();
+        $menuCategories = MenuCategory::forRestaurant()
+            ->latest()
+            ->get();
 
         return view('menu-categories.index', compact('menuCategories'));
     }
@@ -22,7 +27,9 @@ class MenuCategoryController extends Controller
 
     public function store(StoreMenuCategoryRequest $request)
     {
-        MenuCategory::create($request->validated());
+        MenuCategory::create($request->validated() + [
+            'restaurant_id' => auth()->id(),
+        ]);
 
         return redirect()->route('menu-categories.index')->with('success', 'Menu category created successfully.');
     }
@@ -42,7 +49,6 @@ class MenuCategoryController extends Controller
     public function destroy(MenuCategory $menuCategory)
     {
         $menuCategory->delete();
-
         return redirect()->route('menu-categories.index')->with('success', 'Menu category deleted successfully.');
     }
 }

@@ -3,7 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\Restaurant;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends Factory<Restaurant>
@@ -20,9 +22,10 @@ class RestaurantFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->company() . ' Restaurant',
+            'user_id' => User::factory(),
+            'name' => fake()->company().' Restaurant',
             'username' => fake()->unique()->userName(),
-            'password' => static::$password ??= \Illuminate\Support\Facades\Hash::make('password'),
+            'password' => static::$password ??= Hash::make('password'),
             'address' => fake()->address(),
             'phone' => fake()->phoneNumber(),
             'logo_url' => null,

@@ -14,8 +14,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('/');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Restaurants
-    Route::resource('restaurants', RestaurantController::class);
+    // Restaurants (admin only)
+    Route::middleware('is_admin')->group(function () {
+        Route::resource('restaurants', RestaurantController::class);
+    });
+
     Route::resource('menus', MenuController::class);
     Route::resource('menu-categories', MenuCategoryController::class);
 

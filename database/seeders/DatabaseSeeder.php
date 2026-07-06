@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Menu;
 use App\Models\Restaurant;
 use App\Models\User;
-use Database\Factories\RestaurantFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -19,14 +18,31 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
+        $admin = User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
-            'password'=>Hash::make('password')
+            'password' => Hash::make('password'),
+            'is_admin' => true,
         ]);
 
-        Restaurant::factory(10)->has(Menu::factory(10))->create();
+        $shan_ma_lay = User::factory()->create([
+            'name' => 'Shan Ma Lay',
+            'email' => 'shan',
+            'password' => Hash::make('password'),
+        ]);
+
+        Restaurant::factory(3)
+            ->for($admin)
+            ->has(Menu::factory(5))
+            ->create();
+
+        Restaurant::factory(3)
+            ->for($shan_ma_lay)
+            ->has(Menu::factory(5))
+            ->create();
+
+        Restaurant::factory(3)
+            ->has(Menu::factory(5))
+            ->create();
     }
 }
