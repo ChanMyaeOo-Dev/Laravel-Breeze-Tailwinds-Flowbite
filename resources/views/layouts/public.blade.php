@@ -18,16 +18,16 @@
             body { font-family: 'Figtree', sans-serif; }
         </style>
     </head>
-    <body class="bg-gray-50 min-h-screen">
+    <body class="bg-light min-h-screen">
         <div class="min-h-screen flex flex-col">
             {{-- Header --}}
-            <header class="bg-white shadow-sm border-b border-gray-200">
+            <header class="bg-white shadow-sm border-b border-default">
                 <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
                     <div>
-                        <h1 class="text-xl font-bold text-gray-900">{{ $restaurantName ?? '' }}</h1>
-                        <p class="text-sm text-gray-500">Table {{ $tableNumber ?? '' }}</p>
+                        <h1 class="text-xl font-bold text-dark">{{ $restaurantName ?? '' }}</h1>
+                        <p class="text-sm text-body">Table {{ $tableNumber ?? '' }}</p>
                     </div>
-                    <div class="text-sm text-gray-400">
+                    <div class="text-sm text-body">
                         Scan & Order
                     </div>
                 </div>
@@ -36,13 +36,13 @@
             {{-- Content --}}
             <main class="flex-1 max-w-4xl mx-auto w-full px-4 py-6">
                 @if (session('success'))
-                    <div class="mb-6 p-4 text-sm text-green-800 rounded-lg bg-green-50 border border-green-200" role="alert">
+                    <div class="mb-6 p-4 text-sm rounded-lg bg-success/10 text-success border border-success/20" role="alert">
                         {{ session('success') }}
                     </div>
                 @endif
 
                 @if ($errors->any())
-                    <div class="mb-6 p-4 text-sm text-red-800 rounded-lg bg-red-50 border border-red-200">
+                    <div class="mb-6 p-4 text-sm rounded-lg bg-danger/10 text-danger border border-danger/20">
                         <ul class="list-disc list-inside">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -55,8 +55,8 @@
             </main>
 
             {{-- Footer --}}
-            <footer class="bg-white border-t border-gray-200 py-4">
-                <div class="max-w-4xl mx-auto px-4 text-center text-sm text-gray-400">
+            <footer class="bg-white border-t border-default py-4">
+                <div class="max-w-4xl mx-auto px-4 text-center text-sm text-body">
                     Powered by SmartServe
                 </div>
             </footer>
