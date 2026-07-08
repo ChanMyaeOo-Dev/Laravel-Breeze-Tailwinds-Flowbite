@@ -45,102 +45,144 @@
                         <div class="flex-1 min-w-0">
                             <div class="relative mb-4">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 text-body" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                                     </svg>
                                 </div>
                                 <input type="text" x-model.debounce.300ms="search"
                                     class="block w-full p-3 pl-10 text-sm text-dark bg-white border border-default rounded-lg focus:ring-brand focus:border-brand"
                                     placeholder="Search menu items...">
+                                <button x-show="search" @click="search = ''" type="button"
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3 text-body hover:text-dark">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
                             </div>
 
                             <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
                                 <button type="button" @click="activeCategory = null"
                                     class="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full transition-colors"
-                                    :class="activeCategory === null ? 'bg-brand text-white' : 'bg-white text-body hover:bg-light border border-default'">
+                                    :class="activeCategory === null ? 'bg-brand text-white' : 'bg-light text-dark hover:bg-gray-200'">
                                     All
                                 </button>
                                 @foreach ($menuCategories as $category)
                                     <button type="button" @click="activeCategory = {{ $category->id }}"
                                         class="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full transition-colors"
-                                        :class="activeCategory === {{ $category->id }} ? 'bg-brand text-white' : 'bg-white text-body hover:bg-light border border-default'">
+                                        :class="activeCategory === {{ $category->id }} ? 'bg-brand text-white' : 'bg-light text-dark hover:bg-gray-200'">
                                         {{ $category->name }}
                                     </button>
                                 @endforeach
                             </div>
 
-                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                                 <template x-for="menu in filteredMenus" :key="menu.id">
                                     <div @click="addToCart(menu)"
-                                        class="relative cursor-pointer rounded-xl border-2 transition-all duration-200 overflow-hidden bg-white"
-                                        :class="inCart(menu.id) ? 'border-brand shadow-md' : 'border-default hover:border-brand-soft'">
+                                        class="relative cursor-pointer rounded-xl border-2 transition-all duration-200 overflow-hidden"
+                                        :class="inCart(menu.id) ? 'border-brand bg-brand/5 shadow-md' : 'border-default bg-white hover:border-brand-soft hover:shadow-md'">
+
                                         <div x-show="inCart(menu.id)"
                                             class="absolute top-2 right-2 z-10 bg-brand text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center"
                                             x-text="cartQuantity(menu.id)">
                                         </div>
-                                        <div class="h-28 bg-light flex items-center justify-center overflow-hidden">
+
+                                        <div class="h-36 bg-light flex items-center justify-center overflow-hidden">
                                             <template x-if="menu.image">
                                                 <img :src="menu.image_url" :alt="menu.name" class="w-full h-full object-cover">
                                             </template>
                                             <template x-if="!menu.image">
-                                                <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                         d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0A1.5 1.5 0 003 15.546M9 6v2a3 3 0 006 0V6M9 6H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2h-3"/>
                                                 </svg>
                                             </template>
                                         </div>
+
                                         <div class="p-3">
                                             <h3 class="font-semibold text-dark text-sm truncate" x-text="menu.name"></h3>
-                                            <p class="text-brand font-bold text-sm mt-1" x-text="formatCurrency(menu.price)"></p>
+                                            <p class="text-brand font-bold text-base mt-1" x-text="formatCurrency(menu.price)"></p>
                                         </div>
+
                                         <div x-show="inCart(menu.id)" @click.stop class="px-3 pb-3">
                                             <div class="flex items-center justify-between bg-light rounded-lg p-2">
                                                 <button type="button" @click="updateQty(menu.id, -1)"
-                                                    class="w-8 h-8 flex items-center justify-center rounded-full bg-white text-body hover:bg-light shadow-sm">-</button>
+                                                    class="w-8 h-8 flex items-center justify-center rounded-full bg-white text-dark hover:bg-gray-200 shadow-sm transition-colors">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+                                                    </svg>
+                                                </button>
                                                 <span class="font-semibold text-dark w-8 text-center" x-text="cartQuantity(menu.id)"></span>
                                                 <button type="button" @click="updateQty(menu.id, 1)"
-                                                    class="w-8 h-8 flex items-center justify-center rounded-full bg-brand text-white hover:bg-brand-soft shadow-sm">+</button>
+                                                    class="w-8 h-8 flex items-center justify-center rounded-full bg-brand text-white hover:bg-brand-soft shadow-sm transition-colors">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                                    </svg>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                 </template>
                             </div>
 
-                            <div x-show="filteredMenus.length === 0" class="text-center py-12">
-                                <p class="text-body text-sm">No menu items found</p>
+                            <div x-show="filteredMenus.length === 0" class="text-center py-16">
+                                <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                                <p class="text-body text-lg">No menu items found</p>
+                                <p class="text-body text-sm mt-1">Try adjusting your search or category filter</p>
                             </div>
                         </div>
 
-                        <div class="w-full lg:w-80 flex-shrink-0">
+                        <div class="w-full lg:w-96 flex-shrink-0">
                             <div class="lg:sticky lg:top-6">
                                 <div class="bg-white border border-default rounded-xl shadow-sm overflow-hidden">
                                     <div class="bg-brand px-5 py-4">
                                         <h3 class="text-lg font-semibold text-white">Your Order</h3>
-                                        <p class="text-white/70 text-sm mt-0.5" x-text="cart.length + ' item(s)'"></p>
+                                        <p class="text-white/70 text-sm mt-0.5" x-text="cart.length + ' item(s) selected'"></p>
                                     </div>
 
-                                    <div class="max-h-64 overflow-y-auto divide-y divide-light">
+                                    <div class="max-h-80 overflow-y-auto divide-y divide-light">
                                         <template x-if="cart.length === 0">
-                                            <div class="p-6 text-center">
-                                                <p class="text-gray-400 text-sm">Tap items to add them</p>
+                                            <div class="p-8 text-center">
+                                                <svg class="w-12 h-12 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
+                                                </svg>
+                                                <p class="text-body text-sm">Your order is empty</p>
+                                                <p class="text-body text-xs mt-1">Click on menu items to add them</p>
                                             </div>
                                         </template>
                                         <template x-for="(item, index) in cart" :key="item.menu_id">
-                                            <div class="p-3 hover:bg-light transition-colors">
-                                                <div class="flex items-start justify-between gap-2">
+                                            <div class="p-4 hover:bg-light transition-colors">
+                                                <div class="flex items-start justify-between gap-3">
                                                     <div class="flex-1 min-w-0">
                                                         <h4 class="font-medium text-dark text-sm truncate" x-text="item.name"></h4>
-                                                        <p class="text-body text-xs" x-text="formatCurrency(item.price) + ' each'"></p>
+                                                        <p class="text-body text-xs mt-0.5" x-text="formatCurrency(item.price) + ' each'"></p>
                                                     </div>
-                                                    <button type="button" @click="removeFromCart(index)" class="text-gray-400 hover:text-danger">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                                    <button type="button" @click="removeFromCart(index)"
+                                                        class="text-body hover:text-danger transition-colors flex-shrink-0">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                                        </svg>
                                                     </button>
                                                 </div>
+
                                                 <div class="flex items-center justify-between mt-2">
                                                     <div class="flex items-center gap-1">
-                                                        <button type="button" @click="updateQty(item.menu_id, -1)" class="w-7 h-7 flex items-center justify-center rounded-md bg-light text-body hover:bg-gray-200 text-xs">-</button>
-                                                        <span class="w-8 text-center text-sm font-medium" x-text="item.quantity"></span>
-                                                        <button type="button" @click="updateQty(item.menu_id, 1)" class="w-7 h-7 flex items-center justify-center rounded-md bg-brand text-white hover:bg-brand-soft text-xs">+</button>
+                                                        <button type="button" @click="updateQty(item.menu_id, -1)"
+                                                            class="w-7 h-7 flex items-center justify-center rounded-md bg-light text-dark hover:bg-gray-200 transition-colors text-xs">
+                                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+                                                            </svg>
+                                                        </button>
+                                                        <span class="w-8 text-center text-sm font-medium text-dark" x-text="item.quantity"></span>
+                                                        <button type="button" @click="updateQty(item.menu_id, 1)"
+                                                            class="w-7 h-7 flex items-center justify-center rounded-md bg-brand text-white hover:bg-brand-soft transition-colors text-xs">
+                                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                                            </svg>
+                                                        </button>
                                                     </div>
                                                     <span class="font-semibold text-dark text-sm" x-text="formatCurrency(item.price * item.quantity)"></span>
                                                 </div>
@@ -173,7 +215,12 @@
                                     <div class="p-5">
                                         <button type="submit" class="btn-primary w-full justify-center text-base py-3"
                                             :disabled="cart.length === 0 || loading">
-                                            <span x-show="!loading">Place Order</span>
+                                            <span x-show="!loading" class="flex items-center gap-2">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                                </svg>
+                                                Place Order
+                                            </span>
                                             <span x-show="loading" class="flex items-center justify-center gap-2">
                                                 <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
                                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

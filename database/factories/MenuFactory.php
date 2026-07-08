@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Menu;
-use App\Models\MenuCategory;
 use App\Models\Restaurant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -22,7 +21,6 @@ class MenuFactory extends Factory
     {
         return [
             'restaurant_id' => Restaurant::factory(),
-            'menu_category_id' => MenuCategory::factory(),
             'name' => fake()->name,
             'slug' => Str::slug(fake()->name),
             'price' => fake()->numberBetween(1000, 10000),

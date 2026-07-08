@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Menu;
+use App\Models\MenuCategory;
 use App\Models\Restaurant;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -31,18 +32,28 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        Restaurant::factory(3)
-            ->for($admin)
-            ->has(Menu::factory(5))
-            ->create();
+        $adminRestaurants = Restaurant::factory(3)->for($admin)->create();
+        foreach ($adminRestaurants as $restaurant) {
+            $categories = MenuCategory::factory(3)->for($restaurant)->create();
+            foreach ($categories as $category) {
+                Menu::factory(5)->for($restaurant)->for($category)->create();
+            }
+        }
 
-        Restaurant::factory(3)
-            ->for($shan_ma_lay)
-            ->has(Menu::factory(5))
-            ->create();
+        $shanRestaurants = Restaurant::factory(3)->for($shan_ma_lay)->create();
+        foreach ($shanRestaurants as $restaurant) {
+            $categories = MenuCategory::factory(3)->for($restaurant)->create();
+            foreach ($categories as $category) {
+                Menu::factory(5)->for($restaurant)->for($category)->create();
+            }
+        }
 
-        Restaurant::factory(3)
-            ->has(Menu::factory(5))
-            ->create();
+        $unlinkedRestaurants = Restaurant::factory(3)->create();
+        foreach ($unlinkedRestaurants as $restaurant) {
+            $categories = MenuCategory::factory(3)->for($restaurant)->create();
+            foreach ($categories as $category) {
+                Menu::factory(5)->for($restaurant)->for($category)->create();
+            }
+        }
     }
 }
