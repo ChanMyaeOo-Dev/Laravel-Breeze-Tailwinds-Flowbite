@@ -19,6 +19,8 @@
     },
     "dependencies": {
         "datatables.net-dt": "^2.3.8",
-        "flowbite": "^4.0.2"
+        "flowbite": "^4.0.2",
+        "laravel-echo": "^2.3.7",
+        "pusher-js": "^8.5.0"
     }
 }

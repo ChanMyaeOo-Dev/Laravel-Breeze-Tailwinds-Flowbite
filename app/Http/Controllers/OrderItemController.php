@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderItemStatusUpdated;
 use App\Http\Requests\StoreOrderItemRequest;
 use App\Http\Requests\UpdateOrderItemRequest;
 use App\Models\Menu;
@@ -41,7 +42,12 @@ class OrderItemController extends Controller
             abort(403);
         }
 
+        $oldStatus = $orderItem->status;
         $orderItem->update($request->validated());
+
+        if ($orderItem->status !== $oldStatus) {
+            event(new OrderItemStatusUpdated($orderItem->fresh('menu', 'order'), $oldStatus));
+        }
 
         $order->recalculateTotals();
 

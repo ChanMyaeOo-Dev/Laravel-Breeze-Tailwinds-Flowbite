@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewOrderReceived;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Menu;
@@ -65,6 +66,8 @@ class OrderController extends Controller
         }
 
         $order->recalculateTotals();
+
+        event(new NewOrderReceived($order->fresh('orderItems.menu', 'table')));
 
         return redirect()->route('orders.index')->with('success', 'Order created successfully.');
     }
