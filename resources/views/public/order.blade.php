@@ -38,6 +38,101 @@
                     </div>
                 @endif
 
+                @if ($activeOrder)
+                    <div x-data="{ open: true }" class="mb-6 bg-white border border-default rounded-xl overflow-hidden">
+                        <button @click="open = !open" type="button" class="w-full px-5 py-4 flex items-center justify-between hover:bg-light transition-colors">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                                    :class="{
+                                        'bg-info/10': '{{ $activeOrder->status }}' === 'pending',
+                                        'bg-brand/10': '{{ $activeOrder->status }}' === 'preparing',
+                                        'bg-success/10': '{{ $activeOrder->status }}' === 'ready'
+                                    }">
+                                    <svg x-show="'{{ $activeOrder->status }}' === 'pending'" class="w-5 h-5 text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <svg x-show="'{{ $activeOrder->status }}' === 'preparing'" class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
+                                    </svg>
+                                    <svg x-show="'{{ $activeOrder->status }}' === 'ready'" class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                </div>
+                                <div class="text-left">
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="font-semibold text-dark">Order #{{ $activeOrder->order_number }}</h3>
+                                        <span class="text-xs font-medium px-2.5 py-0.5 rounded"
+                                            :class="{
+                                                'bg-info/10 text-info': '{{ $activeOrder->status }}' === 'pending',
+                                                'bg-brand/10 text-brand': '{{ $activeOrder->status }}' === 'preparing',
+                                                'bg-success/10 text-success': '{{ $activeOrder->status }}' === 'ready'
+                                            }">
+                                            {{ ucfirst($activeOrder->status) }}
+                                        </span>
+                                    </div>
+                                    <p class="text-xs text-body mt-0.5">{{ $activeOrder->orderItems->count() }} item(s)</p>
+                                </div>
+                            </div>
+                            <svg class="w-5 h-5 text-body transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+
+                        <div x-show="open" x-collapse>
+                            <div class="px-5 pb-5">
+                                {{-- Progress Steps --}}
+                                <div class="flex items-center justify-between mb-5 px-2">
+                                    @php
+                                        $statuses = ['pending', 'preparing', 'ready'];
+                                        $currentIndex = array_search($activeOrder->status, $statuses);
+                                    @endphp
+                                    @foreach ($statuses as $index => $status)
+                                        <div class="flex flex-col items-center flex-1">
+                                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors {{ $index <= $currentIndex ? 'bg-brand border-brand text-white' : 'bg-light border-default text-body' }}">
+                                                {{ $index + 1 }}
+                                            </div>
+                                            <span class="text-xs mt-1.5 font-medium {{ $index <= $currentIndex ? 'text-brand' : 'text-body' }}">{{ ucfirst($status) }}</span>
+                                        </div>
+                                        @if (! $loop->last)
+                                            <div class="flex-1 h-0.5 mx-2 mt-[-18px] {{ $index < $currentIndex ? 'bg-brand' : 'bg-default' }}"></div>
+                                        @endif
+                                    @endforeach
+                                </div>
+
+                                {{-- Items --}}
+                                <div class="space-y-2 mb-4">
+                                    @foreach ($activeOrder->orderItems as $item)
+                                        <div class="flex items-center justify-between py-2 px-3 bg-light rounded-lg">
+                                            <div class="flex items-center gap-3">
+                                                <span class="text-sm font-medium text-body">{{ $item->quantity }}x</span>
+                                                <span class="text-sm font-medium text-dark">{{ $item->menu->name }}</span>
+                                            </div>
+                                            <span class="text-xs font-medium px-2 py-0.5 rounded"
+                                                :class="{
+                                                    'bg-info/10 text-info': '{{ $item->status }}' === 'pending',
+                                                    'bg-brand/10 text-brand': '{{ $item->status }}' === 'preparing',
+                                                    'bg-success/10 text-success': '{{ $item->status }}' === 'ready',
+                                                    'bg-light text-body': '{{ $item->status }}' === 'served',
+                                                    'bg-danger/10 text-danger': '{{ $item->status }}' === 'cancelled'
+                                                }">
+                                                {{ ucfirst($item->status) }}
+                                            </span>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                @if ($activeOrder->special_instructions)
+                                    <div class="p-3 bg-info/5 border border-info/20 rounded-lg">
+                                        <p class="text-xs text-body">
+                                            <span class="font-medium text-dark">Note:</span> {{ $activeOrder->special_instructions }}
+                                        </p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <form action="{{ route('public.order.store', $restaurantTable->qr_code) }}" method="POST" x-data="orderForm()">
                     @csrf
 

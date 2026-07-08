@@ -26,7 +26,14 @@ class PublicOrderController extends Controller
             ->orderBy('display_order')
             ->get();
 
-        return view('public.order', compact('restaurantTable', 'menus', 'menuCategories'));
+        $activeOrder = Order::where('restaurant_id', $restaurantTable->restaurant_id)
+            ->where('table_id', $restaurantTable->id)
+            ->whereIn('status', ['pending', 'preparing', 'ready'])
+            ->with('orderItems.menu')
+            ->latest()
+            ->first();
+
+        return view('public.order', compact('restaurantTable', 'menus', 'menuCategories', 'activeOrder'));
     }
 
     public function storeOrder(Request $request, string $uuid)

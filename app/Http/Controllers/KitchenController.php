@@ -63,7 +63,7 @@ class KitchenController extends Controller
     {
         $restaurant = Auth::user();
         if ($restaurant) {
-            $restaurant->currentAccessToken()->delete();
+            $restaurant->currentAccessToken()?->delete();
         }
 
         Auth::guard('web')->logout();
