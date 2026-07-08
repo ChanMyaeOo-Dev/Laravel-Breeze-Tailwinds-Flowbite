@@ -63,7 +63,6 @@ it('stores a new restaurant table', function () {
     $data = [
         'table_number' => 'T-101',
         'seating_capacity' => 4,
-        'section' => 'Indoor',
         'status' => 'available',
     ];
 
@@ -74,7 +73,6 @@ it('stores a new restaurant table', function () {
         'restaurant_id' => $this->restaurant->id,
         'table_number' => 'T-101',
         'seating_capacity' => 4,
-        'section' => 'Indoor',
         'status' => 'available',
     ]);
 });
@@ -180,7 +178,6 @@ it('updates a restaurant table', function () {
     $response = $this->put(route('restaurant-tables.update', $table), [
         'table_number' => 'T-UPDATED',
         'seating_capacity' => 8,
-        'section' => 'Outdoor',
         'status' => 'occupied',
     ]);
 
@@ -189,7 +186,6 @@ it('updates a restaurant table', function () {
         'id' => $table->id,
         'table_number' => 'T-UPDATED',
         'seating_capacity' => 8,
-        'section' => 'Outdoor',
         'status' => 'occupied',
     ]);
 });

@@ -24,7 +24,6 @@
             <thead class="text-sm text-body bg-neutral-secondary-medium border-b border-t border-default-medium">
                 <tr>
                     <th scope="col" class="px-6 py-3 font-medium">Table #</th>
-                    <th scope="col" class="px-6 py-3 font-medium">Section</th>
                     <th scope="col" class="px-6 py-3 font-medium">Capacity</th>
                     <th scope="col" class="px-6 py-3 font-medium">Status</th>
                     <th scope="col" class="px-6 py-3 font-medium">QR Code</th>
@@ -36,9 +35,6 @@
                     <tr class="bg-neutral-brand-soft border-b border-default hover:bg-neutral-secondary-medium">
                         <td class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                             {{ $table->table_number }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ $table->section ?? '-' }}
                         </td>
                         <td class="px-6 py-4">
                             {{ $table->seating_capacity }}

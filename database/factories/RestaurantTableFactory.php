@@ -24,7 +24,6 @@ class RestaurantTableFactory extends Factory
             'qr_code' => null,
             'qr_code_image' => null,
             'seating_capacity' => $this->faker->randomElement([2, 4, 6, 8, 10]),
-            'section' => $this->faker->optional()->randomElement(['Indoor', 'Outdoor', 'Patio', 'VIP', 'Bar']),
             'status' => 'available',
         ];
     }

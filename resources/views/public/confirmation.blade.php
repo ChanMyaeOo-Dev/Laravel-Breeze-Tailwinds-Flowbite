@@ -1,4 +1,4 @@
-<x-layouts.public :title="'Order Confirmation'" :$restaurantName="$restaurantTable->restaurant->name" :$tableNumber="$restaurantTable->table_number">
+<x-layouts.public :title="'Order Confirmation'" :restaurant-name="$restaurantTable->restaurant->name" :table-number="$restaurantTable->table_number">
     <div class="text-center py-8">
         <div class="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg class="w-8 h-8 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">

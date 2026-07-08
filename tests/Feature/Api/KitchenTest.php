@@ -262,13 +262,13 @@ describe('Kitchen Orders', function () {
 
         $this->withToken($this->token->plainTextToken)
             ->patchJson("/api/kitchen/orders/{$order->id}/items/{$orderItem->id}/status", [
-                'status' => 'ready',
+                'status' => 'preparing',
             ]);
 
         Event::assertDispatched(OrderItemStatusUpdated::class, function ($event) use ($orderItem) {
             return $event->orderItem->id === $orderItem->id
                 && $event->oldStatus === 'pending'
-                && $event->orderItem->status === 'ready';
+                && $event->orderItem->status === 'preparing';
         });
     });
 

@@ -10,9 +10,27 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class KitchenOrderController extends Controller
 {
+    private const ALLOWED_ORDER_TRANSITIONS = [
+        'pending' => ['preparing', 'cancelled'],
+        'preparing' => ['ready', 'cancelled'],
+        'ready' => ['served'],
+        'served' => [],
+        'completed' => [],
+        'cancelled' => [],
+    ];
+
+    private const ALLOWED_ITEM_TRANSITIONS = [
+        'pending' => ['preparing', 'cancelled'],
+        'preparing' => ['ready', 'cancelled'],
+        'ready' => ['served'],
+        'served' => [],
+        'cancelled' => [],
+    ];
+
     public function index(Request $request): JsonResponse
     {
         $restaurantId = $request->user()->id;
@@ -51,10 +69,25 @@ class KitchenOrderController extends Controller
             'status' => ['required', 'string', 'in:pending,preparing,ready,served,completed,cancelled'],
         ]);
 
-        $oldStatus = $order->status;
-        $order->update(['status' => $validated['status']]);
+        $newStatus = $validated['status'];
+        $allowed = self::ALLOWED_ORDER_TRANSITIONS[$order->status] ?? [];
 
-        event(new OrderStatusUpdated($order, $oldStatus));
+        if (! in_array($newStatus, $allowed)) {
+            throw ValidationException::withMessages([
+                'status' => "Cannot transition from \"{$order->status}\" to \"{$newStatus}\".",
+            ]);
+        }
+
+        $oldStatus = $order->status;
+        $order->update(['status' => $newStatus]);
+
+        if (in_array($newStatus, ['served', 'completed', 'cancelled'])) {
+            $order->orderItems()
+                ->whereNotIn('status', ['cancelled'])
+                ->update(['status' => $newStatus === 'cancelled' ? 'cancelled' : 'served']);
+        }
+
+        event(new OrderStatusUpdated($order->fresh('orderItems.menu', 'table'), $oldStatus));
 
         return response()->json([
             'message' => 'Order status updated.',
@@ -76,10 +109,19 @@ class KitchenOrderController extends Controller
             'status' => ['required', 'string', 'in:pending,preparing,ready,served,cancelled'],
         ]);
 
-        $oldStatus = $orderItem->status;
-        $orderItem->update(['status' => $validated['status']]);
+        $newStatus = $validated['status'];
+        $allowed = self::ALLOWED_ITEM_TRANSITIONS[$orderItem->status] ?? [];
 
-        event(new OrderItemStatusUpdated($orderItem, $oldStatus));
+        if (! in_array($newStatus, $allowed)) {
+            throw ValidationException::withMessages([
+                'status' => "Cannot transition from \"{$orderItem->status}\" to \"{$newStatus}\".",
+            ]);
+        }
+
+        $oldStatus = $orderItem->status;
+        $orderItem->update(['status' => $newStatus]);
+
+        event(new OrderItemStatusUpdated($orderItem->fresh('menu', 'order'), $oldStatus));
 
         return response()->json([
             'message' => 'Order item status updated.',

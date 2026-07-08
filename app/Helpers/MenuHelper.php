@@ -54,6 +54,11 @@ class MenuHelper
                 'path' => '/orders',
             ],
             [
+                'icon' => 'ui-elements',
+                'name' => 'Kitchen',
+                'path' => '/kitchen',
+            ],
+            [
                 'icon' => 'user-profile',
                 'name' => 'User Profile',
                 'path' => '/profile',

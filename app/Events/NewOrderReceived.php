@@ -35,7 +35,7 @@ class NewOrderReceived implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            'order' => (new KitchenOrderResource($this->order->fresh('orderItems.menu', 'table')))->resolve(),
+            'order' => (new KitchenOrderResource($this->order))->resolve(),
         ];
     }
 }

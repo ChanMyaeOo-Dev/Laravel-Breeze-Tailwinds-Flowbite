@@ -73,7 +73,6 @@ it('create page shows only own categories', function () {
 it('stores a new menu with authenticated restaurant', function () {
     $data = [
         'name' => 'Burger',
-        'slug' => 'burger',
         'price' => '9.99',
         'menu_category_id' => $this->menuCategory->id,
         'description' => 'Tasty burger',
@@ -96,7 +95,6 @@ it('ignores restaurant_id from input and uses authenticated restaurant', functio
     $data = [
         'restaurant_id' => $otherRestaurant->id,
         'name' => 'Hacked Menu',
-        'slug' => 'hacked-menu',
         'price' => '1.00',
     ];
 
@@ -116,7 +114,7 @@ it('ignores restaurant_id from input and uses authenticated restaurant', functio
 it('validates required fields on store', function () {
     $response = $this->post(route('menus.store'), []);
 
-    $response->assertSessionHasErrors(['name', 'slug', 'price']);
+    $response->assertSessionHasErrors(['name', 'price']);
 });
 
 it('edit page loads successfully', function () {
@@ -157,7 +155,6 @@ it('updates a menu', function () {
 
     $response = $this->put(route('menus.update', $menu), [
         'name' => 'Updated Menu',
-        'slug' => 'updated-menu',
         'price' => '19.99',
         'description' => 'Updated description',
     ]);
@@ -167,6 +164,7 @@ it('updates a menu', function () {
         'id' => $menu->id,
         'restaurant_id' => $this->restaurant->id,
         'name' => 'Updated Menu',
+        'slug' => 'updated-menu',
         'price' => '19.99',
     ]);
 });
@@ -177,7 +175,6 @@ it('prevents updating other restaurant menu', function () {
 
     $response = $this->put(route('menus.update', $menu), [
         'name' => 'Hacked Update',
-        'slug' => 'hacked-update',
         'price' => '1.00',
     ]);
 
@@ -189,7 +186,7 @@ it('validates required fields on update', function () {
 
     $response = $this->put(route('menus.update', $menu), []);
 
-    $response->assertSessionHasErrors(['name', 'slug', 'price']);
+    $response->assertSessionHasErrors(['name', 'price']);
 });
 
 it('deletes a menu', function () {

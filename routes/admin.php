@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KitchenController;
 use App\Http\Controllers\MenuCategoryController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
@@ -34,4 +35,12 @@ Route::middleware('auth')->group(function () {
     Route::get('switch-account', [SwitchAccountController::class, 'index'])->name('switch-account')->middleware('is_admin');
     Route::get('switch-account/{restaurant}/login', [SwitchAccountController::class, 'showLogin'])->name('switch-account.show-login')->middleware('is_admin');
     Route::post('switch-account/{restaurant}', [SwitchAccountController::class, 'switch'])->name('switch-account.switch')->middleware('is_admin');
+
+    // Kitchen Display (display + logout require auth)
+    Route::get('kitchen', [KitchenController::class, 'display'])->name('kitchen.display');
+    Route::post('kitchen/logout', [KitchenController::class, 'logout'])->name('kitchen.logout');
 });
+
+// Kitchen Login (no auth required)
+Route::get('kitchen/login', [KitchenController::class, 'loginForm'])->name('kitchen.login');
+Route::post('kitchen/login', [KitchenController::class, 'login'])->name('kitchen.login.submit')->middleware('throttle:5,1');

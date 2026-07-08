@@ -9,6 +9,7 @@ use App\Models\Menu;
 use App\Models\MenuCategory;
 use App\Services\ImageService;
 use App\Traits\RestaurantScoped;
+use Illuminate\Support\Str;
 
 class MenuController extends Controller
 {
@@ -43,9 +44,15 @@ class MenuController extends Controller
             OptimizeImageJob::dispatch($imagePath, $imageService->getDisk());
         }
 
+        $slug = Str::slug($request->name);
+        if (Menu::where('slug', $slug)->exists()) {
+            $slug .= '-'.Str::random(5);
+        }
+
         unset($validated['image']);
         $menu = Menu::create($validated + [
             'restaurant_id' => auth()->id(),
+            'slug' => $slug,
             'image' => $imagePath,
         ]);
 
@@ -83,8 +90,13 @@ class MenuController extends Controller
             OptimizeImageJob::dispatch($imagePath, $imageService->getDisk());
         }
 
+        $slug = Str::slug($request->name);
+        if (Menu::where('slug', $slug)->where('id', '!=', $menu->id)->exists()) {
+            $slug .= '-'.Str::random(5);
+        }
+
         unset($validated['image']);
-        $menu->update($validated + ['image' => $imagePath]);
+        $menu->update($validated + ['slug' => $slug, 'image' => $imagePath]);
 
         return redirect()->route('menus.index')->with('success', 'Menu updated successfully.');
     }

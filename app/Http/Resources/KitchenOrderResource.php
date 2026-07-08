@@ -18,11 +18,10 @@ class KitchenOrderResource extends JsonResource
             'tax_amount' => $this->tax_amount,
             'total_amount' => $this->total_amount,
             'created_at' => $this->created_at?->toISOString(),
-            'table' => [
-                'id' => $this->table?->id,
-                'table_number' => $this->table?->table_number,
-                'section' => $this->table?->section,
-            ],
+            'table' => $this->table ? [
+                'id' => $this->table->id,
+                'table_number' => $this->table->table_number,
+            ] : null,
             'items' => KitchenOrderItemResource::collection($this->whenLoaded('orderItems')),
         ];
     }
