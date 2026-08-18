@@ -7,5 +7,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('restaurant.{restaurantId}.kitchen', function ($user, $restaurantId) {
-    return (int) $user->id === (int) $restaurantId || ($user->user?->is_admin ?? false);
+    return (int) $user->id === (int) $restaurantId
+        || ($user->is_admin ?? false)
+        || ($user->user?->is_admin ?? false);
 });

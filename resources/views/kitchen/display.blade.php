@@ -1,4 +1,4 @@
-<x-layouts.kitchen title="Kitchen Display">
+<x-layouts.kitchen title="Kitchen Display" :token="$token">
     <div x-data="kitchenDisplay()" x-init="init()" class="min-h-screen flex flex-col">
         {{-- Header --}}
         <header class="bg-white border-b border-default px-6 py-3 flex items-center justify-between sticky top-0 z-40">
@@ -276,6 +276,42 @@
 
                 initEcho() {
                     try {
+                        if (!window.Echo) {
+                            console.warn('Echo is not available');
+                            this.startPolling();
+                            return;
+                        }
+
+                        const pusherConn = window.Echo.connector?.pusher?.connection;
+                        if (pusherConn) {
+                            if (pusherConn.state === 'connected') {
+                                this.echoConnected = true;
+                                this.pollingMode = false;
+                                this.stopPolling();
+                            }
+                            pusherConn.bind('connected', () => {
+                                this.echoConnected = true;
+                                this.pollingMode = false;
+                                this.stopPolling();
+                            });
+                            pusherConn.bind('disconnected', () => {
+                                this.echoConnected = false;
+                                this.startPolling();
+                            });
+                            pusherConn.bind('unavailable', () => {
+                                this.echoConnected = false;
+                                this.startPolling();
+                            });
+                            pusherConn.bind('failed', () => {
+                                this.echoConnected = false;
+                                this.startPolling();
+                            });
+                        } else {
+                            this.echoConnected = true;
+                            this.pollingMode = false;
+                            this.stopPolling();
+                        }
+
                         this.echoInstance = window.Echo.private(`restaurant.${this.restaurantId}.kitchen`)
                             .listen('.order.received', (e) => {
                                 this.addOrder(e.order);
@@ -286,23 +322,16 @@
                             })
                             .listen('.order.item.status.updated', (e) => {
                                 this.updateItemStatusFromEvent(e);
+                            })
+                            .error((err) => {
+                                console.error('Kitchen channel error:', err);
+                                this.echoConnected = false;
+                                this.startPolling();
                             });
-
-                        this.echoConnected = true;
-                        this.pollingMode = false;
-                        this.stopPolling();
-                        this.stopReconnecting();
-
-                        this.echoInstance.error(() => {
-                            this.echoConnected = false;
-                            this.startPolling();
-                            this.startReconnecting();
-                        });
                     } catch (err) {
                         console.error('Echo init failed:', err);
                         this.echoConnected = false;
                         this.startPolling();
-                        this.startReconnecting();
                     }
                 },
 

@@ -17,8 +17,10 @@
 
     --text-base: 0.9rem;
 
-    --color-brand: #134e4a;
-    --color-brand-soft: #0f766e;
+    /* slate */
+    --color-brand: #0f172a;
+    /* slate soft */
+    --color-brand-soft: #334155;
     --color-secondary: #171717;
     --color-dark: #171717;
     --color-dark-50: #171717;

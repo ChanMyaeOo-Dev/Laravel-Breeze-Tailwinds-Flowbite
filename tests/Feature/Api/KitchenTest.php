@@ -12,6 +12,7 @@ use App\Models\RestaurantTable;
 use Illuminate\Support\Facades\Event;
 
 beforeEach(function () {
+    auth()->logout();
     $this->restaurant = Restaurant::factory()->create();
     $this->menuCategory = MenuCategory::factory()->create(['restaurant_id' => $this->restaurant->id]);
     $this->menu = Menu::factory()->create([
@@ -325,5 +326,52 @@ describe('New Order Event', function () {
 
         $response->assertRedirect();
         Event::assertDispatched(NewOrderReceived::class);
+    });
+
+    it('broadcasts NewOrderReceived when order is created via public table QR', function () {
+        Event::fake([NewOrderReceived::class]);
+
+        $response = $this->post(route('public.order.store', $this->restaurantTable->qr_code), [
+            'items' => [
+                ['menu_id' => $this->menu->id, 'quantity' => 2],
+            ],
+        ]);
+
+        $response->assertRedirect(route('public.order.confirmation', $this->restaurantTable->qr_code));
+        Event::assertDispatched(NewOrderReceived::class);
+    });
+
+    it('authorizes kitchen broadcast channel via api for authenticated restaurant', function () {
+        config(['broadcasting.default' => 'reverb']);
+        app()->forgetInstance('Illuminate\Broadcasting\BroadcastManager');
+        require base_path('routes/channels.php');
+
+        $token = $this->restaurant->createToken('kitchen-display');
+
+        $response = $this->withToken($token->plainTextToken)
+            ->postJson('/api/broadcasting/auth', [
+                'socket_id' => '1234.5678',
+                'channel_name' => "private-restaurant.{$this->restaurant->id}.kitchen",
+            ]);
+
+        $response->assertOk();
+        $response->assertJsonStructure(['auth']);
+    });
+
+    it('denies kitchen broadcast channel via api for other restaurant', function () {
+        config(['broadcasting.default' => 'reverb']);
+        app()->forgetInstance('Illuminate\Broadcasting\BroadcastManager');
+        require base_path('routes/channels.php');
+
+        $token = $this->restaurant->createToken('kitchen-display');
+        $otherRestaurant = Restaurant::factory()->create();
+
+        $response = $this->withToken($token->plainTextToken)
+            ->postJson('/api/broadcasting/auth', [
+                'socket_id' => '1234.5678',
+                'channel_name' => "private-restaurant.{$otherRestaurant->id}.kitchen",
+            ]);
+
+        $response->assertForbidden();
     });
 });

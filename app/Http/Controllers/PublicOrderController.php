@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewOrderReceived;
 use App\Models\Menu;
 use App\Models\MenuCategory;
 use App\Models\Order;
@@ -68,6 +69,8 @@ class PublicOrderController extends Controller
         }
 
         $order->recalculateTotals();
+
+        event(new NewOrderReceived($order->fresh('orderItems.menu', 'table')));
 
         return redirect()->route('public.order.confirmation', $uuid)
             ->with('success', 'Order placed successfully!');
