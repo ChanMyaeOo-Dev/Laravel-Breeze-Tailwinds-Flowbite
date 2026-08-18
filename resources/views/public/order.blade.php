@@ -39,38 +39,52 @@
                 @endif
 
                 @if ($activeOrder)
-                    <div x-data="{ open: true }" class="mb-6 bg-white border border-default rounded-xl overflow-hidden">
+                    <div x-data="activeOrderTracker()" x-init="init()" class="mb-6 bg-white border border-default rounded-xl overflow-hidden shadow-sm">
                         <button @click="open = !open" type="button" class="w-full px-5 py-4 flex items-center justify-between hover:bg-light transition-colors">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300"
                                     :class="{
-                                        'bg-info/10': '{{ $activeOrder->status }}' === 'pending',
-                                        'bg-brand/10': '{{ $activeOrder->status }}' === 'preparing',
-                                        'bg-success/10': '{{ $activeOrder->status }}' === 'ready'
+                                        'bg-info/10 text-info': status === 'pending',
+                                        'bg-brand/10 text-brand ring-4 ring-brand/20 animate-pulse': status === 'preparing',
+                                        'bg-success/10 text-success ring-4 ring-success/20 animate-bounce': status === 'ready',
+                                        'bg-success/10 text-success': status === 'served' || status === 'completed',
+                                        'bg-danger/10 text-danger': status === 'cancelled'
                                     }">
-                                    <svg x-show="'{{ $activeOrder->status }}' === 'pending'" class="w-5 h-5 text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg x-show="status === 'pending'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
-                                    <svg x-show="'{{ $activeOrder->status }}' === 'preparing'" class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg x-show="status === 'preparing'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
                                     </svg>
-                                    <svg x-show="'{{ $activeOrder->status }}' === 'ready'" class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg x-show="status === 'ready'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                                    </svg>
+                                    <svg x-show="status === 'served' || status === 'completed'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                    <svg x-show="status === 'cancelled'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                                     </svg>
                                 </div>
                                 <div class="text-left">
                                     <div class="flex items-center gap-2">
                                         <h3 class="font-semibold text-dark">Order #{{ $activeOrder->order_number }}</h3>
-                                        <span class="text-xs font-medium px-2.5 py-0.5 rounded"
+                                        <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider transition-colors"
                                             :class="{
-                                                'bg-info/10 text-info': '{{ $activeOrder->status }}' === 'pending',
-                                                'bg-brand/10 text-brand': '{{ $activeOrder->status }}' === 'preparing',
-                                                'bg-success/10 text-success': '{{ $activeOrder->status }}' === 'ready'
-                                            }">
+                                                'bg-info/10 text-info': status === 'pending',
+                                                'bg-brand/10 text-brand': status === 'preparing',
+                                                'bg-success/10 text-success ring-1 ring-success/30': status === 'ready',
+                                                'bg-light text-dark': status === 'served' || status === 'completed',
+                                                'bg-danger/10 text-danger': status === 'cancelled'
+                                            }"
+                                            x-text="status.toUpperCase()">
                                             {{ ucfirst($activeOrder->status) }}
                                         </span>
                                     </div>
-                                    <p class="text-xs text-body mt-0.5">{{ $activeOrder->orderItems->count() }} item(s)</p>
+                                    <p class="text-xs text-body mt-0.5">
+                                        <span x-text="items.length"></span> item(s) •
+                                        <span class="font-medium text-brand" x-text="statusMessage"></span>
+                                    </p>
                                 </div>
                             </div>
                             <svg class="w-5 h-5 text-body transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,43 +96,88 @@
                             <div class="px-5 pb-5">
                                 {{-- Progress Steps --}}
                                 <div class="flex items-center justify-between mb-5 px-2">
-                                    @php
-                                        $statuses = ['pending', 'preparing', 'ready'];
-                                        $currentIndex = array_search($activeOrder->status, $statuses);
-                                    @endphp
-                                    @foreach ($statuses as $index => $status)
-                                        <div class="flex flex-col items-center flex-1">
-                                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors {{ $index <= $currentIndex ? 'bg-brand border-brand text-white' : 'bg-light border-default text-body' }}">
-                                                {{ $index + 1 }}
-                                            </div>
-                                            <span class="text-xs mt-1.5 font-medium {{ $index <= $currentIndex ? 'text-brand' : 'text-body' }}">{{ ucfirst($status) }}</span>
+                                    {{-- Step 1: Received --}}
+                                    <div class="flex flex-col items-center flex-1">
+                                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all duration-300"
+                                            :class="stepIndex >= 0 ? 'bg-brand border-brand text-white' : 'bg-light border-default text-body'">
+                                            <svg x-show="stepIndex > 0" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                                            </svg>
+                                            <span x-show="stepIndex <= 0">1</span>
                                         </div>
-                                        @if (! $loop->last)
-                                            <div class="flex-1 h-0.5 mx-2 mt-[-18px] {{ $index < $currentIndex ? 'bg-brand' : 'bg-default' }}"></div>
-                                        @endif
-                                    @endforeach
+                                        <span class="text-xs mt-1.5 font-medium transition-colors"
+                                            :class="stepIndex >= 0 ? 'text-brand font-semibold' : 'text-body'">Received</span>
+                                    </div>
+
+                                    <div class="flex-1 h-0.5 mx-2 -mt-4 transition-colors duration-300"
+                                        :class="stepIndex >= 1 ? 'bg-brand' : 'bg-default'"></div>
+
+                                    {{-- Step 2: Preparing --}}
+                                    <div class="flex flex-col items-center flex-1">
+                                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all duration-300"
+                                            :class="stepIndex >= 1 ? (status === 'preparing' ? 'bg-brand border-brand text-white ring-4 ring-brand/20' : 'bg-brand border-brand text-white') : 'bg-light border-default text-body'">
+                                            <svg x-show="stepIndex > 1" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                                            </svg>
+                                            <span x-show="stepIndex <= 1">2</span>
+                                        </div>
+                                        <span class="text-xs mt-1.5 font-medium transition-colors"
+                                            :class="stepIndex >= 1 ? 'text-brand font-semibold' : 'text-body'">Preparing</span>
+                                    </div>
+
+                                    <div class="flex-1 h-0.5 mx-2 -mt-4 transition-colors duration-300"
+                                        :class="stepIndex >= 2 ? 'bg-brand' : 'bg-default'"></div>
+
+                                    {{-- Step 3: Ready --}}
+                                    <div class="flex flex-col items-center flex-1">
+                                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all duration-300"
+                                            :class="stepIndex >= 2 ? (status === 'ready' ? 'bg-success border-success text-white ring-4 ring-success/20 animate-pulse' : 'bg-brand border-brand text-white') : 'bg-light border-default text-body'">
+                                            <svg x-show="stepIndex > 2" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                                            </svg>
+                                            <span x-show="stepIndex <= 2">3</span>
+                                        </div>
+                                        <span class="text-xs mt-1.5 font-medium transition-colors"
+                                            :class="stepIndex >= 2 ? 'text-success font-semibold' : 'text-body'">Ready</span>
+                                    </div>
+
+                                    <div class="flex-1 h-0.5 mx-2 -mt-4 transition-colors duration-300"
+                                        :class="stepIndex >= 3 ? 'bg-brand' : 'bg-default'"></div>
+
+                                    {{-- Step 4: Served --}}
+                                    <div class="flex flex-col items-center flex-1">
+                                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all duration-300"
+                                            :class="stepIndex >= 3 ? 'bg-brand border-brand text-white' : 'bg-light border-default text-body'">
+                                            <svg x-show="stepIndex >= 3" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                                            </svg>
+                                            <span x-show="stepIndex < 3">4</span>
+                                        </div>
+                                        <span class="text-xs mt-1.5 font-medium transition-colors"
+                                            :class="stepIndex >= 3 ? 'text-brand font-semibold' : 'text-body'">Served</span>
+                                    </div>
                                 </div>
 
                                 {{-- Items --}}
                                 <div class="space-y-2 mb-4">
-                                    @foreach ($activeOrder->orderItems as $item)
+                                    <template x-for="item in items" :key="item.id">
                                         <div class="flex items-center justify-between py-2 px-3 bg-light rounded-lg">
                                             <div class="flex items-center gap-3">
-                                                <span class="text-sm font-medium text-body">{{ $item->quantity }}x</span>
-                                                <span class="text-sm font-medium text-dark">{{ $item->menu->name }}</span>
+                                                <span class="text-sm font-medium text-body" x-text="item.quantity + 'x'"></span>
+                                                <span class="text-sm font-medium text-dark" x-text="item.name"></span>
                                             </div>
                                             <span class="text-xs font-medium px-2 py-0.5 rounded"
                                                 :class="{
-                                                    'bg-info/10 text-info': '{{ $item->status }}' === 'pending',
-                                                    'bg-brand/10 text-brand': '{{ $item->status }}' === 'preparing',
-                                                    'bg-success/10 text-success': '{{ $item->status }}' === 'ready',
-                                                    'bg-light text-body': '{{ $item->status }}' === 'served',
-                                                    'bg-danger/10 text-danger': '{{ $item->status }}' === 'cancelled'
-                                                }">
-                                                {{ ucfirst($item->status) }}
+                                                    'bg-info/10 text-info': item.status === 'pending',
+                                                    'bg-brand/10 text-brand': item.status === 'preparing',
+                                                    'bg-success/10 text-success': item.status === 'ready',
+                                                    'bg-light text-body': item.status === 'served',
+                                                    'bg-danger/10 text-danger': item.status === 'cancelled'
+                                                }"
+                                                x-text="item.status">
                                             </span>
                                         </div>
-                                    @endforeach
+                                    </template>
                                 </div>
 
                                 @if ($activeOrder->special_instructions)
@@ -346,6 +405,83 @@
         </div>
 
         <script>
+            @if ($activeOrder)
+            function activeOrderTracker() {
+                return {
+                    orderId: {{ $activeOrder->id }},
+                    tableId: {{ $restaurantTable->id }},
+                    status: '{{ $activeOrder->status }}',
+                    open: true,
+                    items: @js($activeOrder->orderItems->map(fn($item) => [
+                        'id' => $item->id,
+                        'name' => $item->menu->name,
+                        'quantity' => $item->quantity,
+                        'status' => $item->status,
+                    ])->values()->all()),
+
+                    init() {
+                        this.initEcho();
+                    },
+
+                    get stepIndex() {
+                        const statusMap = {
+                            pending: 0,
+                            preparing: 1,
+                            ready: 2,
+                            served: 3,
+                            completed: 3,
+                            cancelled: -1
+                        };
+                        return statusMap[this.status] ?? 0;
+                    },
+
+                    get statusMessage() {
+                        switch (this.status) {
+                            case 'pending': return 'Order received by kitchen';
+                            case 'preparing': return 'Kitchen is preparing your food';
+                            case 'ready': return 'Food is ready to be served!';
+                            case 'served':
+                            case 'completed': return 'Served to your table';
+                            case 'cancelled': return 'Order cancelled';
+                            default: return '';
+                        }
+                    },
+
+                    initEcho() {
+                        if (!window.Echo) {
+                            return;
+                        }
+
+                        try {
+                            window.Echo.channel(`orders.${this.orderId}`)
+                                .listen('.order.status.updated', (e) => {
+                                    if (e.order_id === this.orderId) {
+                                        this.status = e.new_status;
+                                        if (['served', 'completed', 'cancelled'].includes(e.new_status)) {
+                                            this.items.forEach(i => {
+                                                if (i.status !== 'cancelled') {
+                                                    i.status = e.new_status === 'cancelled' ? 'cancelled' : 'served';
+                                                }
+                                            });
+                                        }
+                                    }
+                                })
+                                .listen('.order.item.status.updated', (e) => {
+                                    if (e.order_id === this.orderId) {
+                                        const item = this.items.find(i => i.id === e.order_item_id);
+                                        if (item) {
+                                            item.status = e.new_status;
+                                        }
+                                    }
+                                });
+                        } catch (err) {
+                            console.error('Failed to subscribe to order channel:', err);
+                        }
+                    }
+                }
+            }
+            @endif
+
             function orderForm() {
                 return {
                     search: '',

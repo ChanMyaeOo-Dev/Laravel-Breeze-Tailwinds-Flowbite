@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Order;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -22,9 +23,16 @@ class OrderStatusUpdated implements ShouldBroadcastNow
 
     public function broadcastOn(): array
     {
-        return [
+        $channels = [
             new PrivateChannel('restaurant.'.$this->order->restaurant_id.'.kitchen'),
+            new Channel('orders.'.$this->order->id),
         ];
+
+        if ($this->order->table_id) {
+            $channels[] = new Channel('tables.'.$this->order->table_id);
+        }
+
+        return $channels;
     }
 
     public function broadcastAs(): string
