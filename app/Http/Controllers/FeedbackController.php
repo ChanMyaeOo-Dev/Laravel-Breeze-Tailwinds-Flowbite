@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreFeedbackRequest;
 use App\Http\Requests\UpdateFeedbackRequest;
 use App\Models\Feedback;
+use App\Services\AI\FeedbackSummaryService;
 use App\Traits\RestaurantScoped;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,25 +13,51 @@ class FeedbackController extends Controller
 {
     use RestaurantScoped;
 
-    public function index()
+    public function index(FeedbackSummaryService $summaryService)
     {
         $feedbacks = Feedback::with('analysis')
             ->where('restaurant_id', Auth::id())
             ->latest()
             ->get();
 
+        $analyzed = $feedbacks->filter->analysis;
+
+        // $stats = [
+        //     'total' => $feedbacks->count(),
+        //     'analyzed' => $analyzed->count(),
+        //     'positive' => $analyzed->where('sentiment', 'positive')->count(),
+        //     'neutral' => $analyzed->where('sentiment', 'neutral')->count(),
+        //     'negative' => $analyzed->where('sentiment', 'negative')->count(),
+        //     'avg_confidence' => $analyzed->pluck('confidence')->avg(),
+        //     'avg_rating' => round($feedbacks->avg('rating'), 1),
+        // ];
         $stats = [
             'total' => $feedbacks->count(),
-            'analyzed' => $feedbacks->filter->analysis->count(),
-            'positive' => $feedbacks->where('analysis.sentiment', 'positive')->count(),
-            'neutral' => $feedbacks->where('analysis.sentiment', 'neutral')->count(),
-            'negative' => $feedbacks->where('analysis.sentiment', 'negative')->count(),
-            'avg_confidence' => $feedbacks->pluck('analysis')
-                ->filter()
-                ->avg('confidence'),
+
+            'analyzed' => $analyzed->count(),
+
+            'positive' => $analyzed->filter(
+                fn($feedback) => $feedback->analysis?->sentiment === 'positive'
+            )->count(),
+
+            'neutral' => $analyzed->filter(
+                fn($feedback) => $feedback->analysis?->sentiment === 'neutral'
+            )->count(),
+
+            'negative' => $analyzed->filter(
+                fn($feedback) => $feedback->analysis?->sentiment === 'negative'
+            )->count(),
+
+            'avg_confidence' => round(
+                $analyzed->avg(fn($feedback) => $feedback->analysis?->confidence),
+                2
+            ),
+
+            'avg_rating' => round($feedbacks->avg('rating'), 1),
         ];
 
-        return view('feedbacks.index', compact('feedbacks', 'stats'));
+        $summary = $summaryService->generate($feedbacks);
+        return view('feedbacks.index', compact('feedbacks', 'stats', 'summary'));
     }
 
     public function create()

@@ -31,7 +31,8 @@
     {{-- Fav Icon --}}
     <link rel="icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/favicon.ico">
-    {{-- <link rel="manifest" href="/site.webmanifest"> --}}
+    {{--
+    <link rel="manifest" href="/site.webmanifest"> --}}
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -51,21 +52,22 @@
             <div class="w-full h-full bg-white rounded">
                 <div
                     class="bg-white border border-neutral-300 rounded h-full p-6 overflow-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                    {{-- <x-nav-bar /> --}}
+                    {{--
+                    <x-nav-bar /> --}}
                     {{ $slot }}
                 </div>
             </div>
         </main>
     </div>
     <script src="{{ asset('assets/js/flowbite.min.js') }}"></script>
-    <script>
+    {{-- <script>
         var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-        var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        // var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
 
         // Change the icons inside the button based on previous settings
         if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia(
                 '(prefers-color-scheme: dark)').matches)) {
-            themeToggleLightIcon.classList.remove('hidden');
+            // themeToggleLightIcon.classList.remove('hidden');
         } else {
             themeToggleDarkIcon.classList.remove('hidden');
         }
@@ -75,7 +77,7 @@
         themeToggleBtn.addEventListener('click', function() {
 
             themeToggleDarkIcon.classList.toggle('hidden');
-            themeToggleLightIcon.classList.toggle('hidden');
+            // themeToggleLightIcon.classList.toggle('hidden');
 
             if (localStorage.getItem('color-theme')) {
                 if (localStorage.getItem('color-theme') === 'light') {
@@ -97,7 +99,7 @@
             }
 
         });
-    </script>
+    </script> --}}
     @stack('modals')
     @stack('scripts')
 </body>
