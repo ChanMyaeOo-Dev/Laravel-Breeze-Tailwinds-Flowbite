@@ -59,6 +59,11 @@ class MenuHelper
                 'path' => '/kitchen',
             ],
             [
+                'icon' => 'ui-elements',
+                'name' => 'Feedbacks',
+                'path' => '/feedbacks',
+            ],
+            [
                 'icon' => 'user-profile',
                 'name' => 'User Profile',
                 'path' => '/profile',
@@ -118,7 +123,7 @@ class MenuHelper
 
     public static function isActive($currentPath = null, $path = null)
     {
-        $is_active = Str::startsWith('/'.$currentPath, $path);
+        $is_active = Str::startsWith('/' . $currentPath, $path);
 
         // if($path=='/menus' || $path == "/restaurants"){
         // dump("/".$currentPath,$path,$is_active);

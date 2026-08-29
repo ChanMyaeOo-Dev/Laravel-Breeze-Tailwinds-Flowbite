@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\KitchenController;
 use App\Http\Controllers\MenuCategoryController;
 use App\Http\Controllers\MenuController;
@@ -25,6 +26,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('restaurant-tables', RestaurantTableController::class);
     Route::resource('menus', MenuController::class);
+    Route::resource('feedbacks', FeedbackController::class);
     Route::resource('menu-categories', MenuCategoryController::class);
 
     // Orders

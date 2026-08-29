@@ -19,41 +19,35 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('password'),
-            'is_admin' => true,
+        $admin = User::firstOrCreate(
+            ['name' => 'Admin'],
+            [
+                'email' => 'admin@gmail.com',
+                'password' => Hash::make('password'),
+                'is_admin' => true,
+            ]
+        );
+
+        $shan_ma_lay = User::firstOrCreate(
+            ['name' => 'Shan Ma Lay'],
+            [
+                'email' => 'shan@gmail.com', // Added a valid email format if required by your DB
+                'password' => Hash::make('password'),
+            ]
+        );
+
+        // If you want to ensure the restaurant exists for the admin:
+        $restaurant = Restaurant::firstOrCreate(
+            ['user_id' => $admin->id], // Assuming the foreign key is user_id
+            [
+                // Add other default restaurant attributes here if needed,
+                // or use the factory to generate them:
+                'name' => 'Admin Restaurant',
+            ]
+        );
+
+        $this->call([
+            FeedbackSeeder::class,
         ]);
-
-        $shan_ma_lay = User::factory()->create([
-            'name' => 'Shan Ma Lay',
-            'email' => 'shan',
-            'password' => Hash::make('password'),
-        ]);
-
-        $adminRestaurants = Restaurant::factory(3)->for($admin)->create();
-        foreach ($adminRestaurants as $restaurant) {
-            $categories = MenuCategory::factory(3)->for($restaurant)->create();
-            foreach ($categories as $category) {
-                Menu::factory(5)->for($restaurant)->for($category)->create();
-            }
-        }
-
-        $shanRestaurants = Restaurant::factory(3)->for($shan_ma_lay)->create();
-        foreach ($shanRestaurants as $restaurant) {
-            $categories = MenuCategory::factory(3)->for($restaurant)->create();
-            foreach ($categories as $category) {
-                Menu::factory(5)->for($restaurant)->for($category)->create();
-            }
-        }
-
-        $unlinkedRestaurants = Restaurant::factory(3)->create();
-        foreach ($unlinkedRestaurants as $restaurant) {
-            $categories = MenuCategory::factory(3)->for($restaurant)->create();
-            foreach ($categories as $category) {
-                Menu::factory(5)->for($restaurant)->for($category)->create();
-            }
-        }
     }
 }
