@@ -499,11 +499,12 @@
                     return Math.floor(diff / 86400) + 'd ago';
                 },
 
-                playNotificationSound() {
-                    try {
-                        const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdH+JkI2HfnR4goeOj4uFgH5/g4aLjIqFf31+gYKGioqJhYB+fYCEiIqKiYSAfX2Ag4eKiYiDf31+gYOFiIeFgH1+gIOGiIeFgH1+gIOGiIeFgH1+gIOGiIeFgH0=');
-                        audio.volume = 0.3;
-                        audio.play().catch(() => {});
+               playNotificationSound() {
+                try {
+                    let audio = new Audio({{ Js::from(asset('sounds/order_noti.wav')) }});
+                    audio.volume = 0.99;
+                    audio.muted = true; // Add this line
+                    audio.play().catch(() => {});
                     } catch (e) {}
                 },
             }
