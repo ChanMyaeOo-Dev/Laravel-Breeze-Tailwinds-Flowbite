@@ -11,12 +11,26 @@ use Illuminate\Support\Facades\Auth;
 class FeedbackController extends Controller
 {
     use RestaurantScoped;
+
     public function index()
     {
-        $feedbacks = Feedback::where('restaurant_id', Auth::id())
+        $feedbacks = Feedback::with('analysis')
+            ->where('restaurant_id', Auth::id())
             ->latest()
             ->get();
-        return view('feedbacks.index', compact('feedbacks'));
+
+        $stats = [
+            'total' => $feedbacks->count(),
+            'analyzed' => $feedbacks->filter->analysis->count(),
+            'positive' => $feedbacks->where('analysis.sentiment', 'positive')->count(),
+            'neutral' => $feedbacks->where('analysis.sentiment', 'neutral')->count(),
+            'negative' => $feedbacks->where('analysis.sentiment', 'negative')->count(),
+            'avg_confidence' => $feedbacks->pluck('analysis')
+                ->filter()
+                ->avg('confidence'),
+        ];
+
+        return view('feedbacks.index', compact('feedbacks', 'stats'));
     }
 
     public function create()
