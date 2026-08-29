@@ -178,6 +178,147 @@
             </div>
         </div>
 
+        {{-- Feedback Card --}}
+        <div x-show="status === 'served' || status === 'completed'" x-transition.opacity x-cloak
+            class="bg-white border border-default rounded-xl shadow-sm overflow-hidden">
+            {{-- Header --}}
+            <div class="px-6 py-4 border-b border-default bg-gradient-to-r from-brand/[0.04] to-transparent">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-brand/10 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-dark">How was your experience?</h3>
+                        <p class="text-xs text-body mt-0.5">Your feedback helps us improve — takes 30 seconds.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-6 py-5">
+                @if (session('feedback_success'))
+                    {{-- Success State --}}
+                    <div class="text-center py-4">
+                        <div class="w-14 h-14 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-7 h-7 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <h4 class="text-base font-semibold text-dark">Thank you for your feedback!</h4>
+                        <p class="text-sm text-body mt-1">We appreciate you taking the time to share your experience.</p>
+                    </div>
+                @elseif(isset($existingFeedback) && $existingFeedback)
+                    {{-- Already Submitted State --}}
+                    <div class="text-center py-2">
+                        <div class="w-14 h-14 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-7 h-7 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <h4 class="text-base font-semibold text-dark">Feedback already submitted</h4>
+                        <p class="text-sm text-body mt-1">Thank you — we received your review for this order.</p>
+                        <div class="mt-4 p-4 bg-light rounded-lg border border-default text-left">
+                            <div class="flex items-center gap-1 mb-2">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <svg class="w-4 h-4 {{ $i <= $existingFeedback->rating ? 'text-yellow-400' : 'text-gray-300' }}" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                @endfor
+                                <span class="text-xs text-body ml-1">{{ $existingFeedback->rating }}/5</span>
+                            </div>
+                            <p class="text-sm text-dark leading-relaxed">{{ $existingFeedback->comment }}</p>
+                        </div>
+                    </div>
+                @else
+                    {{-- Feedback Form --}}
+                    <form method="POST" action="{{ route('public.feedback.store', $restaurantTable->qr_code) }}" x-data="feedbackForm()" @submit="submitting = true">
+                        @csrf
+
+                        {{-- Star Rating --}}
+                        <div>
+                            <label class="block text-sm font-medium text-dark mb-2">Rating <span class="text-danger">*</span></label>
+                            <div class="flex items-center gap-1.5" role="radiogroup" aria-label="Star rating">
+                                <template x-for="star in 5" :key="star">
+                                    <button type="button"
+                                        @click="rating = star"
+                                        @mouseenter="hover = star"
+                                        @mouseleave="hover = 0"
+                                        @keydown.arrow-right.prevent="rating = Math.min(5, rating + 1)"
+                                        @keydown.arrow-left.prevent="rating = Math.max(1, rating - 1)"
+                                        :aria-label="'Rate ' + star + ' stars'"
+                                        :class="{
+                                            'scale-110': hover === star,
+                                            'text-yellow-400': (hover ? star <= hover : star <= rating),
+                                            'text-gray-300': !(hover ? star <= hover : star <= rating)
+                                        }"
+                                        class="transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-brand/30 rounded p-0.5">
+                                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                        </svg>
+                                    </button>
+                                </template>
+                                <span class="ml-2 text-sm font-medium min-w-[60px]" :class="rating ? 'text-dark' : 'text-body'">
+                                    <span x-text="rating ? rating + '/5' : 'Tap to rate'"></span>
+                                </span>
+                            </div>
+                            <input type="hidden" name="rating" :value="rating">
+                            @error('rating')
+                                <p class="text-xs text-danger mt-1.5">{{ $message }}</p>
+                            @enderror
+                            <p x-show="showRatingError" x-cloak class="text-xs text-danger mt-1.5">Please select a star rating.</p>
+                        </div>
+
+                        {{-- Comment --}}
+                        <div class="mt-5">
+                            <label for="feedback-comment" class="block text-sm font-medium text-dark mb-2">Your experience <span class="text-danger">*</span></label>
+                            <textarea id="feedback-comment" name="comment" rows="4" maxlength="1000" required
+                                x-model="comment"
+                                placeholder="Tell us what you loved or how we can do better..."
+                                class="w-full rounded-lg border border-default bg-white px-3.5 py-2.5 text-sm text-dark placeholder:text-body/60 focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none transition-colors resize-none">{{ old('comment') }}</textarea>
+                            <div class="flex justify-between mt-1.5">
+                                <span>
+                                    @error('comment')
+                                        <span class="text-xs text-danger">{{ $message }}</span>
+                                    @enderror
+                                </span>
+                                <span class="text-xs ml-auto" :class="comment.length > 900 ? 'text-danger font-medium' : 'text-body'" x-text="comment.length + '/1000'"></span>
+                            </div>
+                        </div>
+
+                        @error('feedback')
+                            <p class="text-xs text-danger mt-3">{{ $message }}</p>
+                        @enderror
+
+                        {{-- Submit --}}
+                        <button type="submit"
+                            @click="if(!rating){ showRatingError = true; $event.preventDefault(); }"
+                            :disabled="submitting"
+                            class="mt-5 w-full inline-flex items-center justify-center gap-2 bg-brand text-white font-medium rounded-lg px-5 py-3 text-sm hover:bg-brand-soft focus:outline-none focus:ring-2 focus:ring-brand/30 disabled:opacity-60 disabled:cursor-not-allowed transition-colors">
+                            <svg x-show="submitting" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                            </svg>
+                            <span x-text="submitting ? 'Submitting...' : 'Submit Feedback'"></span>
+                        </button>
+                        <p class="text-xs text-body text-center mt-2">One feedback per order — you can edit it later via staff.</p>
+                    </form>
+
+                    <script>
+                        function feedbackForm() {
+                            return {
+                                rating: @js((int) old('rating', 0)),
+                                hover: 0,
+                                comment: @js(old('comment', '')),
+                                submitting: false,
+                                showRatingError: false,
+                            }
+                        }
+                    </script>
+                @endif
+            </div>
+        </div>
+
         {{-- Actions --}}
         <div class="text-center pt-2">
             <a href="{{ route('public.order.form', $restaurantTable->qr_code) }}"

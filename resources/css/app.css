@@ -64,6 +64,10 @@
     }
 }
 
+[x-cloak] {
+    display: none !important;
+}
+
 #DataTable_wrapper > div:nth-child(1) {
     @apply mt-6 flex flex-col items-start justify-between md:items-center md:justify-between md:flex-row;
 }

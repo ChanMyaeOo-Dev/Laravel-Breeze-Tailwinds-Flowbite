@@ -23,7 +23,21 @@ class StoreFeedbackRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'rating' => ['required', 'integer', 'between:1,5'],
+            'comment' => ['required', 'string', 'min:10', 'max:1000'],
+        ];
+    }
+
+    /**
+     * Get custom messages for validation errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'rating.required' => 'Please select a star rating.',
+            'comment.required' => 'Please share your experience.',
         ];
     }
 }

@@ -5,6 +5,8 @@ namespace App\Models;
 use Database\Factories\FeedbackFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Feedback extends Model
 {
@@ -13,12 +15,24 @@ class Feedback extends Model
 
     protected $table = 'feedback';
 
-    public function restaurant()
+    protected $fillable = [
+        'restaurant_id',
+        'order_id',
+        'rating',
+        'comment',
+    ];
+
+    public function restaurant(): BelongsTo
     {
-        return $this->belongsTo(Restaurant::class, 'id', 'restaurant_id');
+        return $this->belongsTo(Restaurant::class);
     }
 
-    public function analysis()
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class);
+    }
+
+    public function analysis(): HasOne
     {
         return $this->hasOne(FeedbackAnalysis::class);
     }

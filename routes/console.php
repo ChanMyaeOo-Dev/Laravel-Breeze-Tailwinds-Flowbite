@@ -6,3 +6,8 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+
+Schedule::command("php artisan feedback:analyze-ml --batch-size=200")
+    ->timezone('Asia/Yangon')
+    ->dailyAt("22:00")
+    ->withoutOverlapping();

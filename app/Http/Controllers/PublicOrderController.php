@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\NewOrderReceived;
+use App\Models\Feedback;
 use App\Models\Menu;
 use App\Models\MenuCategory;
 use App\Models\Order;
@@ -88,6 +89,8 @@ class PublicOrderController extends Controller
             ->with('orderItems.menu')
             ->firstOrFail();
 
-        return view('public.confirmation', compact('restaurantTable', 'order'));
+        $existingFeedback = Feedback::where('order_id', $order->id)->first();
+
+        return view('public.confirmation', compact('restaurantTable', 'order', 'existingFeedback'));
     }
 }
