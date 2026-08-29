@@ -2,7 +2,9 @@
     @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
-                Alpine.store('feedback', { selected: null });
+                Alpine.store('feedback', {
+                    selected: null
+                });
             });
     </script>
     @endpush
@@ -26,14 +28,10 @@
     @endif
 
     {{-- Stats Cards --}}
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
         <div class="bg-white dark:bg-gray-800 border border-default rounded-lg p-4">
             <div class="text-sm text-body font-medium">Total Feedbacks</div>
             <div class="text-2xl font-bold text-brand dark:text-white mt-1">{{ $stats['total'] }}</div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 border border-default rounded-lg p-4">
-            <div class="text-sm text-body font-medium">Analyzed</div>
-            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">{{ $stats['analyzed'] }}</div>
         </div>
         <div class="bg-white dark:bg-gray-800 border border-default rounded-lg p-4">
             <div class="flex items-center gap-2">
@@ -56,12 +54,6 @@
             </div>
             <div class="text-2xl font-bold text-red-600 dark:text-red-400 mt-1">{{ $stats['negative'] }}</div>
         </div>
-        <div class="bg-white dark:bg-gray-800 border border-default rounded-lg p-4">
-            <div class="text-sm text-body font-medium">Avg Confidence</div>
-            <div class="text-2xl font-bold text-brand dark:text-white mt-1">
-                {{ $stats['avg_confidence'] ? round($stats['avg_confidence'] * 100, 1) . '%' : '-' }}
-            </div>
-        </div>
     </div>
 
     {{-- AI Summary Dashboard --}}
@@ -79,7 +71,7 @@
             </div>
         </div>
 
-        <div class="space-y-3 text-sm text-body leading-relaxed">
+        <div class="space-y-3 text-body leading-relaxed">
             @foreach (explode("\n\n", $summary) as $paragraph)
             <p>{{ $paragraph }}</p>
             @endforeach
@@ -156,7 +148,6 @@
                                 </svg>
                                 @endif
                                 @endfor
-                                <span class="ml-1 text-xs text-body">{{ $feedback->rating }}/5</span>
                         </div>
                     </td>
 
@@ -172,8 +163,10 @@
                         @if ($feedback->analysis)
                         @php
                         $sentimentColors = [
-                        'positive' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-                        'neutral' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+                        'positive' =>
+                        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+                        'neutral' =>
+                        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
                         'negative' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
                         ];
                         @endphp
