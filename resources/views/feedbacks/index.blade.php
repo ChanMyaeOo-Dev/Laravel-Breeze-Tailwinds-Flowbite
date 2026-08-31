@@ -122,6 +122,7 @@
                     <th scope="col" class="px-6 py-3 font-medium">Rating</th>
                     <th scope="col" class="px-6 py-3 font-medium">Comment</th>
                     <th scope="col" class="px-6 py-3 font-medium">Sentiment</th>
+                    <th scope="col" class="px-6 py-3 font-medium">Confidence</th>
                     <th scope="col" class="px-6 py-3 font-medium">Date</th>
                 </tr>
             </thead>
@@ -180,6 +181,11 @@
                             Not analyzed
                         </span>
                         @endif
+                    </td>
+
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        {{ $feedback->analysis?->confidence ? number_format($feedback->analysis->confidence * 100, 2) .
+                        '%' : '-' }}
                     </td>
 
                     {{-- Date --}}
